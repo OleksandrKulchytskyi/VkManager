@@ -1,15 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using Utils.Helpers;
 using WpfVkontacteClient.Entities;
 
 namespace WpfVkontacteClient.AdditionalWindow
@@ -19,14 +12,14 @@ namespace WpfVkontacteClient.AdditionalWindow
 	/// </summary>
 	public partial class DocumentViewerWindow : Window
 	{
-		VKontakteApiWrapper m_wrapper = null;
+		GenericWeakReference<VKontakteApiWrapper> _vkWrapper = null;
 
-		public DocumentViewerWindow (VKontakteApiWrapper wrapper)
+		public DocumentViewerWindow(VKontakteApiWrapper wrapper)
 		{
 			InitializeComponent();
 			if (wrapper == null)
 				throw new ArgumentNullException("wrapper");
-			m_wrapper = wrapper;
+			_vkWrapper = new GenericWeakReference<VKontakteApiWrapper>(wrapper);
 		}
 
 		public DocumentViewerWindow(VKontakteApiWrapper wrapper, List<Friend> friends)
@@ -50,8 +43,7 @@ namespace WpfVkontacteClient.AdditionalWindow
 
 		private void cmbSource_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
-			if (!IsInitialized)
-				return;
+			if (!IsInitialized) return;
 
 			if (((cmbSource.SelectedItem as ComboBoxItem).Content as string).Contains("друзей"))
 			{
@@ -68,17 +60,22 @@ namespace WpfVkontacteClient.AdditionalWindow
 		private void cmbFriends_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
 			if ((cmbFriends.SelectedItem as Friend) != null)
-			{
-				carouselContr.ItemsSource= m_wrapper.DocumentsGet((cmbFriends.SelectedItem as Friend).UserId, null);
-			}
+				carouselContr.ItemsSource = _vkWrapper.Target.DocumentsGet((cmbFriends.SelectedItem as Friend).UserId, null);
 		}
 
 		private void Window_Loaded(object sender, RoutedEventArgs e)
 		{
-			var data=m_wrapper.DocumentsGet(null, null);
+			var data = _vkWrapper.Target.DocumentsGet(null, null);
 			if (data == null)
 				data = new List<UserDocument>();
 			carouselContr.ItemsSource = data;
+			this.Closing += DocumentViewerWindow_Closing;
+		}
+
+		void DocumentViewerWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+		{
+			Friends = null;
+			_vkWrapper = null;
 		}
 	}
 }

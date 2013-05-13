@@ -4,8 +4,8 @@
 		xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
         Title="Окно входа в систему" Height="550" Width="740"
 		Closing="Window_Closing" FocusManager.FocusedElement="{Binding ElementName=webBrowser}">
-    <Grid>
-		<WindowsFormsHost >
+	<Grid>
+		<WindowsFormsHost x:Name="wfHost">
 			<wf:WebBrowser x:Name="webBrowser" />
 		</WindowsFormsHost>
 	</Grid>

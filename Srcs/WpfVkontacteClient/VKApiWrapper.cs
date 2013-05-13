@@ -229,8 +229,7 @@ namespace WpfVkontacteClient
 			m_connected = false;
 			//Получим данные сессии
 			LoginWindow login = new LoginWindow(m_appId, m_settings);
-			if (owner != null)
-				login.Owner = owner;
+			if (owner != null) login.Owner = owner;
 			login.WindowStartupLocation = WindowStartupLocation.CenterOwner;
 			if (login.ShowDialog() == true)
 			{
@@ -263,13 +262,16 @@ namespace WpfVkontacteClient
 					else
 					{
 						VKErrorInfo errorInfo = this.GetErrorContent(res);
+						LogModule.LoggingModule.Instance.WriteMessage(LogModule.LoggingModule.Severity.Error, errorInfo.ErrorMessage);
 					}
 				}
 				catch (Exception ex)
 				{
-					MessageBox.Show(ex.Message);
+					MessageBox.Show(owner, ex.Message);
 				}
 			}
+			if (login != null)
+				login = null;
 			return m_connected;
 		}
 
@@ -347,6 +349,7 @@ namespace WpfVkontacteClient
 		/// </summary>
 		/// <param name="values">список параметров</param>
 		/// <returns>сигнатуру</returns>
+		[Obsolete("Due to VK API changes this method is deprecated.")]
 		private string CreateSignature(List<VKParameter> values)
 		{
 			using (MD5 md5 = MD5CryptoServiceProvider.Create())
@@ -372,7 +375,7 @@ namespace WpfVkontacteClient
 			}
 		}
 
-		[Obsolete("This is deprecated method. Please use ExecuteMethodByToken")]
+		[Obsolete("This method is deprecated. Please use ExecuteMethodByToken instead.")]
 		public XmlDocument ExecuteMethod(string methodName, List<VKParameter> methodParams)
 		{
 			List<VKParameter> temp = new List<VKParameter>();

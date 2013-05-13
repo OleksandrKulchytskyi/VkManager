@@ -42,11 +42,7 @@ namespace WpfVkontacteClient.AdditionalWindow
 			this.Closing += (s, e) =>
 				{
 					if (ProgramSettings != null)
-					{
 						ProgramSettings = null;
-						GC.Collect();
-						GC.WaitForPendingFinalizers();
-					}
 
 					(this.Owner as MainWindow).Focus();
 				};
@@ -60,13 +56,9 @@ namespace WpfVkontacteClient.AdditionalWindow
 				using (ConfigurationManager man = new ConfigurationManager())
 				{
 					if (man.SaveProgramSettings(ProgramSettings))
-					{
-						MessageBox.Show("Настройки успешно изменены", "", MessageBoxButton.OK,
-							 MessageBoxImage.Information);
-					}
+						MessageBox.Show(this, "Настройки успешно изменены", string.Empty, MessageBoxButton.OK, MessageBoxImage.Information);
 				}
 			}
-
 			this.Close();
 		}
 

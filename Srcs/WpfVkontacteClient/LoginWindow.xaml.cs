@@ -59,10 +59,11 @@ namespace WpfVkontacteClient
 
 		private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
 		{
-			if (!webBrowser.Disposing)
-				webBrowser.Dispose();
+			webBrowser.Navigated -= new System.Windows.Forms.WebBrowserNavigatedEventHandler(webBrowser_Navigated);
+			if (!webBrowser.Disposing) webBrowser.Dispose();
+			if (wfHost != null) wfHost.Dispose();
 
-			GC.Collect(1, GCCollectionMode.Forced);
+			GC.Collect();
 			GC.WaitForPendingFinalizers();
 		}
 	}

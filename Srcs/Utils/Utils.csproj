@@ -53,6 +53,7 @@
     <Compile Include="ByteCache.cs" />
     <Compile Include="DateTimeUtils.cs" />
     <Compile Include="FriendsCache.cs" />
+    <Compile Include="Helpers\GenericWeakReference.cs" />
     <Compile Include="ImageCache.cs" />
     <Compile Include="JSONParser.cs" />
     <Compile Include="KeyboardUtils.cs" />
