@@ -1,0 +1,16 @@
+﻿<Window x:Class="WpfVkontacteClient.AdditionalWindow.WindowAvatarLoader"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Окно загрузки аватарок" Height="90" Width="400" ShowInTaskbar="False" WindowStartupLocation="CenterOwner"
+		WindowStyle="ToolWindow" Loaded="Window_Loaded">
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition/>
+			<RowDefinition/>
+		</Grid.RowDefinitions>
+		<TextBox Grid.Row="0" Margin="3,2,0,0" x:Name="txtProgress"/>
+		<StackPanel Grid.Row="1">
+			<ProgressBar x:Name="prgDownloadsOverall" Height="18"/>
+		</StackPanel>
+	</Grid>
+</Window>

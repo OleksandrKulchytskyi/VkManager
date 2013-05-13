@@ -1,0 +1,521 @@
+﻿<Window x:Class="WpfVkontacteClient.MainWindow"
+		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:converter="clr-namespace:WpfVkontacteClient.Converters"
+		xmlns:contr="clr-namespace:WpfVkontacteClient.Controls"
+		xmlns:ent="clr-namespace:WpfVkontacteClient.Entities"
+		xmlns:tempSel="clr-namespace:WpfVkontacteClient.TemplateSelector"
+		Title="Клиент соц сети Вконтакте" Height="500" Width="670" Loaded="Window_Loaded" 
+		Icon="/WpfVkontacteClient;component/Images/Book3.ico" x:Name="mainWindow">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Styles\ScrollBarStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <converter:BoolToVisibility x:Key="BoolToVis"/>
+			<tempSel:MessageTemplateSelector x:Key="msgTempSel"/>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Window.Triggers>
+        <!--<EventTrigger RoutedEvent="Window.Loaded">
+			<BeginStoryboard>
+				<Storyboard Name="FormFade">
+					<DoubleAnimation  Name="FormFadeAnimation"
+										Storyboard.TargetName="mainWindow"
+										Storyboard.TargetProperty="(Window.Opacity)"
+										From="0.0" To="1.0" Duration="0:0:0.8"
+										AutoReverse="False" RepeatBehavior="1x"/>
+				</Storyboard>
+			</BeginStoryboard>
+		</EventTrigger>-->
+        <EventTrigger RoutedEvent="Window.Unloaded">
+            <BeginStoryboard>
+                <Storyboard Name="FormFadeOut">
+                    <DoubleAnimation Name="FormFadeOutAnimation"
+									Storyboard.TargetName="mainWindow"
+									Storyboard.TargetProperty="(Window.Opacity)"
+									From="1.0" To="0.0" Duration="0:0:1.5"
+									AutoReverse="False" RepeatBehavior="1x"/>
+                </Storyboard>
+            </BeginStoryboard>
+        </EventTrigger>
+    </Window.Triggers>
+    <DockPanel>
+        <Menu x:Name="mainMenu" DockPanel.Dock="Top">
+            <MenuItem Header="Ф_айл">
+                <MenuItem x:Name="miExit" Header="Выход" Click="miExit_Click" />
+            </MenuItem>
+            <MenuItem Header="Н_астройки">
+                <MenuItem x:Name="miSettings" Header="Настройки программы" Click="miSettings_Click"/>
+            </MenuItem>
+            <MenuItem Header="П_апки">
+                <MenuItem Header="Аудио" x:Name="miAudioFolder" Click="miAudioFolder_Click"/>
+                <MenuItem Header="Видео" x:Name="miVideoFolder" Click="miVideoFolder_Click"/>
+            </MenuItem>
+            <MenuItem Header="Дополнения">
+                <MenuItem x:Name="miAlbums" Header="Альбомы друзей" Click="miAlbums_Click"/>
+                <MenuItem x:Name="miDocs" Header="Документы" Click="miDocs_Click"/>
+                <MenuItem x:Name="miWebCam" Header="Взять изображение" Click="miWebCam_Click"/>
+				<MenuItem x:Name="miDownVideoLinks" Header="Загрузить видео" Click="miDownVideoLinks_Click" ToolTip="Загрузка видеозаписей по ссылке"/>
+            </MenuItem>
+            <MenuItem Header="А_втор">
+                <MenuItem x:Name="miAbout" Header="Про автора" Click="miAbout_Click"/>
+            </MenuItem>
+        </Menu>
+        <Grid>
+            <TabControl x:Name="mainTab" SelectionChanged="mainTab_SelectionChanged"
+						SelectedIndex="0" Visibility="Visible">
+				<TabControl.Resources>
+					<Style TargetType="{x:Type ListBox}">
+						<EventSetter Event="KeyDown" Handler="friendsList_KeyDown"/>
+					</Style>
+				</TabControl.Resources>
+                <TabItem x:Name="tiFriends" Header="Друзья">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="20"/>
+                            <RowDefinition/>
+                            <RowDefinition Height="30"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Text=" Все друзья:"/>
+                        <TextBlock Text=" Онлайн друзья:" Grid.Column="1"/>
+						<ListBox Grid.Row="1" x:Name="friendsList" ItemsSource="{Binding Path=AllFriends, Mode=TwoWay}">
+							<ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Border>
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding Path=FirstName}"/>
+                                            <TextBlock Text="{Binding Path=LastName}"/>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                        <ListView x:Name="lstOnline" ItemsSource="{Binding}" SelectionMode="Single"
+								  Grid.Column="1" Height="Auto" Margin="1,0,0,1" Grid.RowSpan="2"
+								  VirtualizingStackPanel.IsVirtualizing="True">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Width="70" Header="Имя">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Label Margin="4" Content="{Binding Path=FirstName}"/>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Width="90" Header="Фамилия">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Label Margin="4" Content="{Binding Path=LastName}"/>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Width="70" Header="Ник">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Label Margin="4" Content="{Binding Path=Nick}"/>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Width="90" Header="Аватар">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Image Margin="4" Source="{Binding Path=Picture}"/>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                        <Button x:Name="btnLoadFriends" Content="Список друей" Grid.Row="2"
+								Click="btnLoadFriends_Click" Style="{DynamicResource MyButtonGlowStyle}"
+								ToolTip="Загрузить список всех друзей"/>
+                        <Button x:Name="btnLoadOnFriends" Content="Список онлайн друзей" Grid.Row="2" Grid.Column="1"
+								Click="btnLoadOnFriends_Click" Style="{DynamicResource MyButtonGlowStyle}"
+								ToolTip="Загрузить список онлайн друзей"/>
+                    </Grid>
+                </TabItem>
+                <TabItem x:Name="tiWall" Header="Стена">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="200"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Button x:Name="btnWallGetAll" Click="btnWallGetAll_Click" Content="Получить записи стены"
+								Grid.Column="1"/>
+                        <ComboBox x:Name="cmbWallUsers" SelectedIndex="0" SelectionChanged="cmbWallUsers_SelectionChanged"
+								  Height="23">
+                            <ComboBoxItem Content="Моя стена"/>
+                            <ComboBoxItem Content="Моя друзья"/>
+                        </ComboBox>
+                        <ListBox x:Name="lstWallFriends" ItemsSource="{Binding}"
+								 Grid.Row="1">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Border>
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding Path=FirstName}" Width="180" TextWrapping="Wrap"/>
+                                            <TextBlock Text="{Binding Path=LastName}" Width="180" TextWrapping="Wrap"/>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                        <ListBox x:Name="lstWallPosts" ItemsSource="{Binding}" Grid.Row="1"
+								 Grid.Column="1" VirtualizingStackPanel.IsVirtualizing="True" 
+								 VirtualizingStackPanel.VirtualizationMode="Recycling" SelectionChanged="lstWallPosts_SelectionChanged" >
+                            <ListBox.Resources>
+                                <converter:InstanceToVisibilityConverter x:Key="InstToVist"/>
+                            </ListBox.Resources>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel>
+                                        <Separator/>
+                                        <TextBlock Text="{Binding Path=Date,StringFormat={}{0:d}}"/>
+                                        <TextBlock Text="{Binding Path=Text}" Width="250" TextWrapping="Wrap"/>
+                                        <Expander Header="{Binding Path=Media.Type}" Visibility="{Binding Path=Media,Converter={StaticResource InstToVist}}"
+												  x:Name="expWallMedia" Expanded="expWallMedia_Expanded" Collapsed="expWallMedia_Collapsed" >
+                                            <Grid DataContext="{Binding Path=Attachment,Mode=OneWay}" x:Name="wallExpGrid">
+                                                <Image x:Name="imgWallItem" Visibility="Collapsed" Width="130" Height="150"/>
+                                                <contr:MyMediaControl x:Name="myWallPlayer" 
+																	  PlayerSoyrce="{Binding Path=Url, Mode=OneWay}" DataContext="{Binding Path=Audio}"
+																	  FromId="{Binding Path=FromId}"/>
+                                                <TextBlock x:Name="txtWallNote" Visibility="Collapsed" DataContext="{Binding Path=Note}"
+														   Text="{Binding Path=Text}"/>
+                                            </Grid>
+                                        </Expander>
+                                        <TextBlock Text="{Binding Path=LikesCount, StringFormat=Понравилось: {0}}"/>
+                                        <TextBlock Text="{Binding Path=CommentsCount,StringFormat=Прокомментировало: {0}}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Grid>
+                </TabItem>
+                <TabItem x:Name="tiMessages" Header="Сообщения">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="20"/>
+                            <RowDefinition/>
+                            <RowDefinition Height="30"/>
+                        </Grid.RowDefinitions>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text=" Тип сообщений: "/>
+                            <ComboBox x:Name="cmbMessageType" Width="140" HorizontalAlignment="Left"
+									  SelectedIndex="0">
+                                <ComboBox.Items>
+                                    <ComboBoxItem Content="Входящие"/>
+                                    <ComboBoxItem Content="Новые непрочитанные"/>
+                                    <ComboBoxItem Content="Отправленые"/>
+                                </ComboBox.Items>
+                            </ComboBox>
+                        </StackPanel>
+
+                        <ListBox x:Name="messagesInput" ItemsSource="{Binding}" Grid.Row="1"
+								 SelectionChanged="messagesInput_SelectionChanged" ItemTemplateSelector="{StaticResource msgTempSel}">
+							<ListBox.Resources>
+								<ContextMenu x:Key="msgContMenu">
+									<MenuItem Header="Пометить прочтенным"
+														  Click="MarkAsRead_Click"/>
+									<MenuItem Header="Пометить как новое"
+														  Click="MarkAsNew_Click"/>
+									<Separator/>
+									<MenuItem Header="Удалить"
+														  Click="RemoveMsg_Click"/>
+									<MenuItem Header="Найти"
+														  Click="FindMsg_Click"/>
+								</ContextMenu>
+								<DataTemplate x:Key="readedTemplate" DataType="{x:Type ent:UserMessage}">
+									<Border BorderBrush="Silver" BorderThickness="1" CornerRadius="4" ContextMenu="{StaticResource msgContMenu}">
+										<StackPanel>
+											<TextBlock Text="Тема:" Foreground="Blue"/>
+											<TextBlock Text="{Binding MessageTitle}"/>
+											<TextBlock Text="Сообщение:" Foreground="Blue"/>
+											<TextBlock Text="{Binding MessageBody}" TextWrapping="Wrap" Width="280"/>
+										</StackPanel>
+									</Border>
+								</DataTemplate>
+								<DataTemplate x:Key="nonReadTemplate" DataType="{x:Type ent:UserMessage}">
+									<Border BorderBrush="Red" BorderThickness="1" CornerRadius="4" ContextMenu="{StaticResource msgContMenu}">
+										<StackPanel>
+											<TextBlock Text="Тема:" Foreground="Blue"/>
+											<TextBlock Text="{Binding MessageTitle}"/>
+											<TextBlock Text="Сообщение:" Foreground="Blue"/>
+											<TextBlock Text="{Binding MessageBody}" TextWrapping="Wrap" Width="280"/>
+										</StackPanel>
+									</Border>
+								</DataTemplate>
+							</ListBox.Resources>
+                        </ListBox>
+                        <Button x:Name="btnLoadInpMessage" Content="Загрузить сообщения" Grid.Row="2"
+								Click="btnLoadInpMessage_Click" Style="{DynamicResource MyButtonGlowStyle}"
+								ToolTip="Загрузить список сообщений"/>
+
+                        <TextBlock Text=" Информация о сообщении:" Grid.Column="1"/>
+                        <StackPanel Grid.Column="1" Grid.Row="1" x:Name="messageInfoStack">
+                            <Image x:Name="imgFriendMes" Width="140" Height="120" HorizontalAlignment="Left">
+                                <Image.ToolTip>
+                                    <ToolTip Style="{DynamicResource ImageTooltip}" />
+                                </Image.ToolTip>
+                            </Image>
+                            <TextBlock Text="От кого\кому:"/>
+                            <TextBlock x:Name="txtMessFio"/>
+                            <TextBlock Text="Пол:"/>
+                            <TextBlock x:Name="txtMessageSex"/>
+                            <TextBlock Text="Тема сообщения"/>
+                            <TextBox x:Name="txtMessageTitle" TextWrapping="Wrap"
+									 IsReadOnly="True"/>
+                            <TextBlock Text="Текст сообщения:"/>
+                            <TextBox x:Name="txtMessageBody" TextWrapping="Wrap" AcceptsReturn="True" AcceptsTab="True"
+									 Height="70" VerticalScrollBarVisibility="Visible" IsReadOnly="True"/>
+                            <Button x:Name="btnMsgReply" Content="Ответить" Style="{DynamicResource MyButtonGlowStyle}"
+									Width="65" Height="23" Click="btnMsgReply_Click"/>
+                        </StackPanel>
+                    </Grid>
+                </TabItem>
+                <TabItem x:Name="tiPhotos" Header="Фотографии">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <ComboBox x:Name="cmbPhotoFriends" IsSynchronizedWithCurrentItem="True"
+								  ItemsSource="{Binding}" SelectionChanged="cmbPhotoFriends_SelectionChanged"/>
+                        <ListBox x:Name="lstUserAlbum" ItemsSource="{Binding}" Grid.Row="1"
+								 IsSynchronizedWithCurrentItem="True"
+								 SelectionChanged="lstUserAlbum_SelectionChanged">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Border BorderBrush="Blue" BorderThickness="2"
+											MinWidth="220" CornerRadius="5">
+                                        <StackPanel>
+                                            <TextBlock Margin="3,0,0,0" Text="{Binding Title}" 
+												   TextWrapping="Wrap" Width="260"/>
+                                            <TextBlock Text="{Binding Description}" TextWrapping="Wrap"
+												   Width="200"/>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                        <ListBox x:Name="lstPhotos" ItemsSource="{Binding}" Grid.Column="1"
+								 Grid.RowSpan="2" IsSynchronizedWithCurrentItem="True" >
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Border MinWidth="250" BorderThickness="3" BorderBrush="Aqua"
+											CornerRadius="4">
+                                        <StackPanel>
+                                            <Image Height="120" Width="140" 
+												   Source="{Binding UriSourceBig}"
+												   HorizontalAlignment="Left"/>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                            <ListBox.ItemContainerStyle>
+                                <Style TargetType="{x:Type ListBoxItem}">
+                                    <EventSetter Event="MouseDoubleClick" Handler="photoItem_DoubleClick" />
+                                </Style>
+                            </ListBox.ItemContainerStyle>
+                        </ListBox>
+                    </Grid>
+                </TabItem>
+                <TabItem x:Name="tiAudio" Header="Аудиозаписи">
+                    <TabItem.CommandBindings>
+                        <CommandBinding Command="ApplicationCommands.SelectAll"
+										Executed="SelectAllExecuted" />
+                    </TabItem.CommandBindings>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <ComboBox x:Name="cmbAudioSource" SelectedIndex="0" Height="23" Width="150"
+								  HorizontalAlignment="Left" SelectionChanged="cmbAudioSource_SelectionChanged">
+                            <ComboBox.Items>
+                                <ComboBoxItem Content="Мои аудиозаписи"/>
+                                <ComboBoxItem Content="Аудио друзей"/>
+                            </ComboBox.Items>
+                        </ComboBox>
+
+                        <Button x:Name="btnUpdateAudio" Content="Обновить" Width="70"
+								Height="24" HorizontalAlignment="Right" Click="btnUpdateAudio_Click" 
+								Style="{DynamicResource MyButtonGlowStyle}"/>
+                        <ListBox Grid.Row="1" x:Name="lstFriendsAudio" ItemsSource="{Binding}"
+								 SelectionChanged="lstFriendsAudio_SelectionChanged">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Border>
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding Path=FirstName}"/>
+                                            <TextBlock Text="{Binding Path=LastName}"/>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                        <ListBox x:Name="lstAudio" ItemsSource="{Binding}" Grid.Row="1"
+								 Grid.Column="1" SelectionMode="Extended">
+                            <ListBox.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Command="ApplicationCommands.SelectAll" Header="Загрузить отмеченые"/>
+                                    <MenuItem Header="Очистить все" Click="clearAllSelDownloads"/>
+                                </ContextMenu>
+                            </ListBox.ContextMenu>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel>
+                                        <CheckBox IsChecked="{Binding IsCheckedInList, Mode=TwoWay}"></CheckBox>
+                                        <TextBlock Text="{Binding Artist}"/>
+                                        <TextBlock Text="{Binding Title}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                            <ListBox.ItemContainerStyle>
+                                <Style TargetType="{x:Type ListBoxItem}">
+                                    <EventSetter Event="MouseDoubleClick" Handler="lstAudio_DblClick"/>
+                                    <EventSetter Event="KeyDown" Handler="listboxItem_KeyDown"/>
+                                </Style>
+                            </ListBox.ItemContainerStyle>
+                        </ListBox>
+                    </Grid>
+                </TabItem>
+                <TabItem x:Name="tiVideo"
+						 Header="Видеозаписи">
+                    <TabItem.CommandBindings>
+                        <CommandBinding Command="ApplicationCommands.SelectAll"
+										Executed="SelectAllVideoExecuted" />
+                    </TabItem.CommandBindings>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <ComboBox x:Name="cmbVideoSource" SelectedIndex="0" Height="23" Width="150"
+								  HorizontalAlignment="Left" SelectionChanged="cmbVideoSource_SelectionChanged">
+                            <ComboBox.Items>
+                                <ComboBoxItem Content="Мои видеозаписи"/>
+                                <ComboBoxItem Content="Видео друзей"/>
+                            </ComboBox.Items>
+                        </ComboBox>
+
+                        <Button x:Name="btnUpdateVideo" Content="Обновить" Width="70"
+								Height="24" HorizontalAlignment="Right" Click="btnUpdateVideo_Click" 
+								Style="{DynamicResource MyButtonGlowStyle}"/>
+                        <ListBox Grid.Row="1" x:Name="lstFriendsVideo" ItemsSource="{Binding}"
+								 SelectionChanged="lstFriendsVideo_SelectionChanged">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Border>
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding Path=FirstName}"/>
+                                            <TextBlock Text="{Binding Path=LastName}"/>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                        <ListBox x:Name="lstVideo" ItemsSource="{Binding}" Grid.Row="1"
+								 Grid.Column="1" SelectionMode="Extended">
+                            <ListBox.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Command="ApplicationCommands.SelectAll" Header="Загрузить отмеченые"/>
+                                    <MenuItem Header="Воспроизвести" Click="PlayVideo_Click"/>
+                                </ContextMenu>
+                            </ListBox.ContextMenu>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel>
+                                        <CheckBox IsChecked="{Binding IsCheckedInList, Mode=TwoWay}"
+												  Content="Добавить в загрузку"/>
+                                        <TextBlock Text="{Binding Title}"/>
+                                        <TextBlock Text="{Binding Description}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                            <ListBox.ItemContainerStyle>
+                                <Style TargetType="{x:Type ListBoxItem}">
+                                    <EventSetter Event="MouseDoubleClick" Handler="lstVideo_DblClick"/>
+                                    <EventSetter Event="KeyDown" Handler="listboxItem_KeyDown"/>
+                                </Style>
+                            </ListBox.ItemContainerStyle>
+                        </ListBox>
+                    </Grid>
+                </TabItem>
+                <TabItem x:Name="tiStatus" Header="Сатусы">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <ComboBox x:Name="cmbStatusSource" SelectedIndex="0" Height="23" Width="150"
+								  HorizontalAlignment="Left" SelectionChanged="cmbStatusSource_SelectionChanged" >
+                            <ComboBox.Items>
+                                <ComboBoxItem Content="Мой Статус"/>
+                                <ComboBoxItem Content="Стаусы друзей"/>
+                            </ComboBox.Items>
+                        </ComboBox>
+
+                        <Button x:Name="btnUpdateStatus" Content="Обновить" Width="70"
+								Height="24" HorizontalAlignment="Right" Click="btnUpdateStatus_Click" 
+								Style="{DynamicResource MyButtonGlowStyle}"/>
+                        <ListBox Grid.Row="1" x:Name="lstFriendsStatus" ItemsSource="{Binding}"
+								 SelectionChanged="lstFriendsStatus_SelectionChanged">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Border>
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding Path=FirstName}"/>
+                                            <TextBlock Text="{Binding Path=LastName}"/>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                        <StackPanel Grid.Column="1" Grid.RowSpan="2" x:Name="stackStatus"
+									DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}">
+                            <TextBlock Text="Статус:" Margin="3,0,0,0"/>
+                            <TextBox x:Name="txtStatus" AcceptsReturn="True"
+									 AcceptsTab="True" Height="70" VerticalScrollBarVisibility="Visible"
+									 IsReadOnly="{Binding IsSelfStatus}"
+									 TextWrapping="Wrap"/>
+                            <Button x:Name="btnChngStatus" Content="Изменить статус"
+									Style="{DynamicResource MyButtonGlowStyle}" Height="25" 
+									HorizontalAlignment="Center" Width="110"
+									Margin="0,3,0,0" ToolTip="Изменить свой статус на текст в поле статус"
+									IsEnabled="{Binding IsSelfStatus}" Click="btnChngStatus_Click" />
+                        </StackPanel>
+                    </Grid>
+                </TabItem>
+            </TabControl>
+        </Grid>
+    </DockPanel>
+</Window>

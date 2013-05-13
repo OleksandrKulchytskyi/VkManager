@@ -1,0 +1,12 @@
+﻿<Window x:Class="WpfVkontacteClient.LoginWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
+        Title="Окно входа в систему" Height="550" Width="740"
+		Closing="Window_Closing" FocusManager.FocusedElement="{Binding ElementName=webBrowser}">
+    <Grid>
+		<WindowsFormsHost >
+			<wf:WebBrowser x:Name="webBrowser" />
+		</WindowsFormsHost>
+	</Grid>
+</Window>

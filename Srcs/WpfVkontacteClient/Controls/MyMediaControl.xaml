@@ -1,0 +1,150 @@
+﻿<UserControl x:Class="WpfVkontacteClient.Controls.MyMediaControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="60" d:DesignWidth="250">
+	<UserControl.Resources>
+		<SolidColorBrush x:Key="HorizontalSliderTrackNormalBackground" Color="#FFE7EAEA"/>
+		<LinearGradientBrush x:Key="HorizontalSliderTrackNormalBorder" EndPoint="0,1" StartPoint="0,0">
+			<GradientStop Color="#FFAEB1AF" Offset="0.1"/>
+			<GradientStop Color="White" Offset=".9"/>
+		</LinearGradientBrush>
+		<Style x:Key="SliderRepeatButtonStyle" TargetType="{x:Type RepeatButton}">
+			<Setter Property="OverridesDefaultStyle" Value="true"/>
+			<Setter Property="IsTabStop" Value="false"/>
+			<Setter Property="Focusable" Value="false"/>
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="{x:Type RepeatButton}">
+						<Rectangle Fill="Transparent"/>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+
+		<Style x:Key="CustomThumbForSlider" TargetType="{x:Type Thumb}">
+			<Setter Property="OverridesDefaultStyle" Value="True"/>
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="{x:Type Thumb}">
+						<Ellipse Fill="#FF8F4040" Stroke="Blue" Height="12" Width="10"/>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+
+		<Style x:Key="MyCustomStyleForSlider" TargetType="{x:Type Slider}">
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="{x:Type Slider}">
+						<Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+							<Grid>
+								<Grid.RowDefinitions>
+									<RowDefinition Height="Auto"/>
+									<RowDefinition Height="Auto" MinHeight="{TemplateBinding MinHeight}"/>
+									<RowDefinition Height="Auto"/>
+								</Grid.RowDefinitions>
+								<TickBar x:Name="TopTick" Visibility="Collapsed" Fill="{TemplateBinding Foreground}" Placement="Top" Height="4" Grid.Row="0"/>
+								<TickBar x:Name="BottomTick" Visibility="Collapsed" Fill="{TemplateBinding Foreground}" Placement="Bottom" Height="4" Grid.Row="0"/>
+								<Border x:Name="TrackBackground" 
+                                        Background="{StaticResource HorizontalSliderTrackNormalBackground}"
+                                        BorderBrush="{StaticResource HorizontalSliderTrackNormalBorder}"                                        
+                                        BorderThickness="1" CornerRadius="1"
+                                        Margin="5,0" VerticalAlignment="Center" Height="4.0" Grid.Row="1" >
+									<Canvas Margin="-6,-1">
+										<Rectangle Visibility="Hidden" x:Name="PART_SelectionRange" Height="4.0"
+                                                   Fill="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"
+                                                   Stroke="{DynamicResource {x:Static SystemColors.ControlDarkDarkBrushKey}}"
+                                                   StrokeThickness="1.0"/>
+									</Canvas>
+								</Border>
+								<Track x:Name="PART_Track" Grid.Row="1">
+									<Track.DecreaseRepeatButton>
+										<RepeatButton  Style="{StaticResource  SliderRepeatButtonStyle}" Command="{x:Static Slider.DecreaseLarge}"/>
+									</Track.DecreaseRepeatButton>
+									<Track.IncreaseRepeatButton>
+										<RepeatButton Style="{StaticResource SliderRepeatButtonStyle}" Command="{x:Static Slider.IncreaseLarge}"/>
+									</Track.IncreaseRepeatButton>
+									<Track.Thumb>
+										<Thumb x:Name="Thumb" Style="{StaticResource CustomThumbForSlider}" Background="Black"/>
+									</Track.Thumb>
+								</Track>
+							</Grid>
+						</Border>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+	</UserControl.Resources>
+	<Border CornerRadius="6" BorderThickness="2" BorderBrush="Blue">
+		<Grid>
+			<Grid.Resources>
+				<!-- Small Top Button Template -->
+				<ControlTemplate x:Key="smallButtonTemplate" TargetType="{x:Type Button}">
+					<Grid Margin="2,0,0,0">
+						<Border x:Name="border" Background="White" BorderThickness="0,0,0,0" Width="20" Height="20">
+						</Border>
+						<Viewbox>
+							<Label x:Name="content" Content="{TemplateBinding Content}" Width="Auto" Height="Auto" VerticalAlignment="Center" 
+					   HorizontalAlignment="Center" Foreground="Black"/>
+						</Viewbox>
+					</Grid>
+					<ControlTemplate.Triggers>
+						<Trigger Property="IsMouseOver" Value="True">
+							<Setter TargetName="content" Property="Foreground" Value="Orange"/>
+							<Setter TargetName="border" Property="BorderThickness" Value="0,0,0,2"/>
+							<Setter TargetName="border" Property="BorderBrush" Value="Orange"/>
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+
+				<!-- Transparent Button Template -->
+				<ControlTemplate x:Key="transparentButtonTemplate" TargetType="{x:Type Button}">
+					<Grid Margin="0,0,0,0" Background="White">
+						<ContentControl x:Name="content" Content="{TemplateBinding Content}" Foreground="Black"/>
+					</Grid>
+				</ControlTemplate>
+
+
+				<!-- Control Button Template-->
+				<ControlTemplate x:Key="controlButtonTemplate" TargetType="{x:Type Button}">
+					<Grid>
+						<Ellipse x:Name="outerCircle" Width="Auto" Height="Auto" StrokeThickness="4" Fill="White" Stroke="Gray"/>
+						<Label x:Name="content" Content="{TemplateBinding Content}" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Gray"/>
+					</Grid>
+					<ControlTemplate.Triggers>
+						<Trigger Property="IsMouseOver" Value="True">
+							<Setter TargetName="outerCircle" Property="Fill" Value="{Binding Path=Foreground, RelativeSource='{RelativeSource TemplatedParent}'}"/>
+							<Setter TargetName="content" Property="Foreground" Value="Gray"/>
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Grid.Resources>
+			<Grid.RowDefinitions>
+				<RowDefinition/>
+				<RowDefinition Height="12"/>
+				<RowDefinition/>
+			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="190"/>
+				<ColumnDefinition />
+			</Grid.ColumnDefinitions>
+			<Slider x:Name="sldLoop" VerticalAlignment="Center"/>
+			<TextBlock x:Name="txtSec" Grid.Column="1"/>
+			<ProgressBar x:Name="prgDownl" Minimum="0" Grid.Row="1" Grid.ColumnSpan="2" Height="8" Margin="2,0,0,2" 
+					 VerticalAlignment="Center" Maximum="100"/>
+			<Slider x:Name="sldVolume" Grid.Row="2" Grid.Column="1" ValueChanged="sldVolume_ValueChanged"
+				Maximum="1" Minimum="0" SmallChange="0.05" Style="{StaticResource MyCustomStyleForSlider}" VerticalAlignment="Center"/>
+			<StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
+				<Button x:Name="btnPlay" Content="4" Click="btnPlay_Click" Template="{StaticResource controlButtonTemplate}"
+						FontFamily="Webdings" ToolTip="Play"/>
+				<Button x:Name="btnStop" Content=";" Click="btnStop_Click" Margin="4,0,0,0" ToolTip="Pause"
+						Template="{StaticResource controlButtonTemplate}" FontFamily="Webdings" Foreground="Orange"/>
+				<Button x:Name="btnPause" Content="&lt;" Click="btnPause_Click" Margin="4,0,0,0" ToolTip="Stop"
+						Template="{StaticResource controlButtonTemplate}" FontFamily="Webdings" Foreground="Yellow"/>
+			</StackPanel>
+		</Grid>
+	</Border>
+</UserControl>

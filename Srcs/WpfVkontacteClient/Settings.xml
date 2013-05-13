@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ProgramSettings>
+	<ClearImageCache>false</ClearImageCache>
+	<ImageCacheMaxSize>10</ImageCacheMaxSize>
+	<DataCacheMaxSize>50</DataCacheMaxSize>
+	<DetermineNewMessages>1</DetermineNewMessages>
+</ProgramSettings>
