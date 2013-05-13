@@ -60,19 +60,16 @@ namespace WpfVkontacteClient.AdditionalWindow
 
 		private void Window_Loaded(object sender, RoutedEventArgs e)
 		{
-
 			loader = new AsyncDownloader();
 			loader.DataToDownload = AudioList.Cast<ItemToLoad>().ToList();
 			loader.DataToDownload.ForEach(
-				new Action<ItemToLoad>((item) =>
-												item.PathToSave = System.IO.Path.Combine((Application.Current as App).AppFolder, "Audio", System.IO.Path.GetFileName(item.Url))
-												)
-										);
+				new Action<ItemToLoad>((item) => item.PathToSave =
+												System.IO.Path.Combine((Application.Current as App).AppFolder, "Audio", System.IO.Path.GetFileName(item.Url))
+												));
 			loader.DownloadingComplete += new EventHandler(loader_DownloadingComplete);
 			loader.ProgressChanged += new EventHandler(loader_ProgressChanged);
 			prgOverall.Value = 0;
 			loader.Download();
-
 		}
 
 		void loader_ProgressChanged(object sender, EventArgs e)
@@ -84,7 +81,6 @@ namespace WpfVkontacteClient.AdditionalWindow
 		{
 			MessageBox.Show("Downloads complete", "", MessageBoxButton.OK, MessageBoxImage.Information);
 		}
-
 
 		private void headerLabel_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
 		{

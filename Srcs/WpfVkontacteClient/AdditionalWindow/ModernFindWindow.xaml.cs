@@ -61,13 +61,13 @@ namespace WpfVkontacteClient.AdditionalWindow
 		{
 			this.DialogResult = true;
 			SearchEventArgs searchArgs = e as SearchEventArgs;
-			if (searchArgs == null)
-				return;
+			
+			if (searchArgs == null) return;
 
 			SearchCriteria = searchArgs.Keyword;
 			if (searchArgs.Sections != null && searchArgs.Sections.Count > 0)
 				SearchSection = searchArgs.Sections[0];
-			
+
 			this.Close();
 		}
 

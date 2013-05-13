@@ -31,6 +31,7 @@ namespace WpfVkontacteClient.AdditionalWindow
 			set;
 		}
 
+		//TODO: make this weak ref
 		protected VKontakteApiWrapper VkWrapper
 		{
 			get;
@@ -39,7 +40,7 @@ namespace WpfVkontacteClient.AdditionalWindow
 		public PhotoPreviewWindow(Entities.PhotoExteded photo, VKontakteApiWrapper wrapper)
 		{
 			InitializeComponent();
-			
+
 			if (photo != null)
 				PhotoObj = photo;
 
@@ -50,9 +51,8 @@ namespace WpfVkontacteClient.AdditionalWindow
 				"Photo", System.IO.Path.GetFileName(photo.SourceBig));
 
 			if (App.Current.ImageCacheInstance.IsCached(photo.SourceBig))
-			{
 				imgPreview.Source = PhotoObj.SourceBig.GetImage();
-			}
+
 			else
 			{
 				WebClient web = new WebClient();
@@ -60,9 +60,7 @@ namespace WpfVkontacteClient.AdditionalWindow
 				web.DownloadDataCompleted += (s, e) =>
 					{
 						if (e.Error == null)
-						{
 							App.Current.ImageCacheInstance.SaveImage(PhotoObj.SourceBig, e.Result);
-						}
 					};
 			}
 
@@ -70,6 +68,7 @@ namespace WpfVkontacteClient.AdditionalWindow
 			{
 				using (WebClient client = new WebClient())
 				{
+					//TODO: Unsubscribe from event here , potential memory leak
 					client.DownloadFileCompleted += (send, arg) =>
 						{
 							imgPreview.Source = new BitmapImage(new Uri(CurrentFoto,
