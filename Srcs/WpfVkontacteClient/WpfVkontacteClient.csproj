@@ -107,7 +107,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="AboutWindow.xaml.cs">
+    <Compile Include="AdditionalWindow\AboutWindow.xaml.cs">
       <DependentUpon>AboutWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="AdditionalWindow\DocumentViewerWindow.xaml.cs">
@@ -194,7 +194,7 @@
     <Compile Include="VKApiWrapper.cs" />
     <Compile Include="VkUrlTemplates.cs" />
     <Compile Include="YouTube\YouTubeProvider.cs" />
-    <Page Include="AboutWindow.xaml">
+    <Page Include="AdditionalWindow\AboutWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

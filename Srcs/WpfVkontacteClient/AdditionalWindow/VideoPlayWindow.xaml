@@ -9,41 +9,40 @@
 			<!-- Control Button Template-->
 			<ControlTemplate x:Key="controlButtonTemplate" TargetType="{x:Type Button}">
 				<Grid>
-					<Ellipse x:Name="outerCircle" Width="Auto" Height="Auto" StrokeThickness="4" Fill="White" Stroke="Gray"/>
-					<Label x:Name="content" Content="{TemplateBinding Content}" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Gray"/>
+					<Ellipse x:Name="outerCircle" Width="Auto" Height="Auto" StrokeThickness="4" Fill="White" Stroke="Gray" />
+					<Label x:Name="content" Content="{TemplateBinding Content}" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Gray" />
 				</Grid>
 				<ControlTemplate.Triggers>
 					<Trigger Property="IsMouseOver" Value="True">
-						<Setter TargetName="outerCircle" Property="Fill" Value="{Binding Path=Foreground, RelativeSource='{RelativeSource TemplatedParent}'}"/>
-						<Setter TargetName="content" Property="Foreground" Value="Gray"/>
+						<Setter TargetName="outerCircle" Property="Fill" Value="{Binding Path=Foreground, RelativeSource='{RelativeSource TemplatedParent}'}" />
+						<Setter TargetName="content" Property="Foreground" Value="Gray" />
 					</Trigger>
 				</ControlTemplate.Triggers>
 			</ControlTemplate>
 		</Grid.Resources>
 		<Grid.RowDefinitions>
-			<RowDefinition/>
-			<RowDefinition Height="30"/>
-			<RowDefinition Height="23"/>
+			<RowDefinition />
+			<RowDefinition Height="30" />
+			<RowDefinition Height="23" />
 		</Grid.RowDefinitions>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition />
-			<ColumnDefinition Width="70"/>
+			<ColumnDefinition Width="70" />
 		</Grid.ColumnDefinitions>
 		<contr:MediaUriElement x:Name="media1" Stretch="Fill"  IsRenderingEnabled="True"
-								LoadedBehavior="Play" Grid.ColumnSpan="2"/>
-		
-		<Slider x:Name="sldVolume" Grid.Row="1" Grid.Column="1" ToolTip="Video volumn" 
-			 Minimum="0" Maximum="1" SmallChange="0.05" ValueChanged="sldVolume_ValueChanged" Value="80"/>
+								LoadedBehavior="Play" Grid.ColumnSpan="2" />
+
+		<Slider x:Name="sldVolume" Grid.Row="1" Grid.Column="1" ToolTip="Video volumn"
+			 Minimum="0" Maximum="1" SmallChange="0.05" ValueChanged="sldVolume_ValueChanged" Value="80" />
 		<ProgressBar x:Name="prgVideo" Grid.Row="1" Maximum="{Binding ElementName=media1, Path=MediaDuration,Mode=OneWay}"
-					 Value="{Binding ElementName=media1,Path=MediaPosition,Mode=TwoWay}" Height="11"/>
+					 Value="{Binding ElementName=media1,Path=MediaPosition,Mode=TwoWay}" Height="11" />
 		<StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
 			<Button x:Name="btnPlay" Content="4" Click="btnPlay_Click" Template="{StaticResource controlButtonTemplate}"
-						FontFamily="Webdings" ToolTip="Play" Foreground="Green"/>
+						FontFamily="Webdings" ToolTip="Play" Foreground="Green" />
 			<Button x:Name="btnStop" Content=";" Click="btnStop_Click" Margin="4,0,0,0" ToolTip="Stop"
-						Template="{StaticResource controlButtonTemplate}" FontFamily="Webdings" Foreground="Orange"/>
+						Template="{StaticResource controlButtonTemplate}" FontFamily="Webdings" Foreground="Orange" />
 			<Button x:Name="btnPause" Content="&lt;" Click="btnPause_Click" Margin="4,0,0,0" ToolTip="Pause"
-						Template="{StaticResource controlButtonTemplate}" FontFamily="Webdings" Foreground="Red"/>
+						Template="{StaticResource controlButtonTemplate}" FontFamily="Webdings" Foreground="Red" />
 		</StackPanel>
-		
 	</Grid>
 </Window>

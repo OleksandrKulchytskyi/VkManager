@@ -1,15 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using UIControls;
 
 namespace WpfVkontacteClient.AdditionalWindow
@@ -38,9 +30,10 @@ namespace WpfVkontacteClient.AdditionalWindow
 		}
 
 		public string SearchCriteria { get; protected set; }
+
 		public string SearchSection { get; protected set; }
 
-		void ModernFindWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+		private void ModernFindWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
 		{
 			srchContr.OnSearch -= new RoutedEventHandler(srchContr_OnSearch);
 		}
@@ -57,11 +50,11 @@ namespace WpfVkontacteClient.AdditionalWindow
 				this.DragMove();
 		}
 
-		void srchContr_OnSearch(object sender, RoutedEventArgs e)
+		private void srchContr_OnSearch(object sender, RoutedEventArgs e)
 		{
 			this.DialogResult = true;
 			SearchEventArgs searchArgs = e as SearchEventArgs;
-			
+
 			if (searchArgs == null) return;
 
 			SearchCriteria = searchArgs.Keyword;
@@ -70,6 +63,5 @@ namespace WpfVkontacteClient.AdditionalWindow
 
 			this.Close();
 		}
-
 	}
 }

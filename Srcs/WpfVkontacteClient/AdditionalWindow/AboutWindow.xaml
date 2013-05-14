@@ -22,10 +22,10 @@
 		<!--Main view-->
 		<GroupBox Margin="10,20,10,10" Header="Про автора...">
 			<StackPanel Margin="10" IsEnabled="True" IsHitTestVisible="True">
-				<TextBlock TextWrapping="WrapWithOverflow">
+				<TextBlock TextWrapping="WrapWithOverflow" x:Name="txtAppDescription">
 					Клиент для сервиса Вконтакте(http://www.vkontakte.ru).
 					<LineBreak/>
-					Версия 1.6.2
+					Версия: [v]
 					<LineBreak/>
 					<LineBreak/>
 					Автор : Кульчицкий Александр

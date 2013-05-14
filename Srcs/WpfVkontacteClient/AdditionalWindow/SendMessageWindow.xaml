@@ -15,8 +15,8 @@
 					<ControlTemplate TargetType="{x:Type Button}">
 						<Grid>
 							<Rectangle RadiusX="1" RadiusY="1" Fill="Blue" Stroke="#FFAAC564" />
-							<Polygon x:Name="xBtn" Margin="1,1,1,1" Fill="#FFAAC564" 
-									 Points="0,6.89 2.57,3.41 0.02,0 1.59,0 3.48,2.53 5.23,0 6.48,0 4.13,3.4 6.74,6.89 5.18,6.89 3.21,4.26 1.28,6.89" 
+							<Polygon x:Name="xBtn" Margin="1,1,1,1" Fill="#FFAAC564"
+									 Points="0,6.89 2.57,3.41 0.02,0 1.59,0 3.48,2.53 5.23,0 6.48,0 4.13,3.4 6.74,6.89 5.18,6.89 3.21,4.26 1.28,6.89"
 									 HorizontalAlignment="Center" VerticalAlignment="Center" />
 						</Grid>
 						<ControlTemplate.Triggers>
@@ -28,34 +28,33 @@
 				</Setter.Value>
 			</Setter>
 
-			<Setter Property="HorizontalAlignment" Value="Right"/>
-			<Setter Property="VerticalAlignment" Value="Top"/>
-			<Setter Property="Margin" Value="0,10,10,0"/>
+			<Setter Property="HorizontalAlignment" Value="Right" />
+			<Setter Property="VerticalAlignment" Value="Top" />
+			<Setter Property="Margin" Value="0,10,10,0" />
 		</Style>
-
 	</Window.Resources>
 	<Grid Margin="3">
 		<!--WINDOW RECT-->
-		<Rectangle Name="windowRect" RadiusX="16" RadiusY="16" Margin="2" Fill="{StaticResource windowBrush}" 
+		<Rectangle Name="windowRect" RadiusX="16" RadiusY="16" Margin="2" Fill="{StaticResource windowBrush}"
 				   Opacity="0.8" StrokeThickness="0" Stroke="{StaticResource sliderBrush}">
 			<Rectangle.BitmapEffect>
 				<DropShadowBitmapEffect></DropShadowBitmapEffect>
 			</Rectangle.BitmapEffect>
 		</Rectangle>
 		<!--WINDOW HEADER-->
-		<Label Height="21" Margin="15,2,118,0" Name="headerLabel" VerticalAlignment="Top" 
-				FontSize="10" Foreground="{StaticResource sliderBrush}" FontWeight="Normal" 
-				Content="{Binding RelativeSource={RelativeSource  AncestorType=Window, Mode=FindAncestor},Path=Title}"/>
-		<Button Style="{StaticResource closeButton}" Height="11" HorizontalAlignment="Right" Margin="0,4,15,0" 
-				x:Name="closeButton" VerticalAlignment="Top" Width="11" 
-				Click="closeButton_Click" ToolTip="Close window" Content="Button"/>
+		<Label Height="21" Margin="15,2,118,0" Name="headerLabel" VerticalAlignment="Top"
+				FontSize="10" Foreground="{StaticResource sliderBrush}" FontWeight="Normal"
+				Content="{Binding RelativeSource={RelativeSource  AncestorType=Window, Mode=FindAncestor},Path=Title}" />
+		<Button Style="{StaticResource closeButton}" Height="11" HorizontalAlignment="Right" Margin="0,4,15,0"
+				x:Name="closeButton" VerticalAlignment="Top" Width="11"
+				Click="closeButton_Click" ToolTip="Close window" Content="Button" />
 		<!--Main view-->
 		<Grid>
 			<Grid.RowDefinitions>
-				<RowDefinition Height="25"/>
-				<RowDefinition Height="23"/>
-				<RowDefinition Height="150"/>
-				<RowDefinition Height="30"/>
+				<RowDefinition Height="25" />
+				<RowDefinition Height="23" />
+				<RowDefinition Height="150" />
+				<RowDefinition Height="30" />
 				<RowDefinition />
 			</Grid.RowDefinitions>
 			<Popup x:Name="msgInfoPopup" SnapsToDevicePixels="True" Height="65" Width="240" IsOpen="False"
@@ -73,36 +72,35 @@
 					</Border.Triggers>
 					<Grid Margin="4">
 						<Grid.RowDefinitions>
-							<RowDefinition Height="26"/>
-							<RowDefinition/>
+							<RowDefinition Height="26" />
+							<RowDefinition />
 						</Grid.RowDefinitions>
 						<Grid.ColumnDefinitions>
-							<ColumnDefinition/>
-							<ColumnDefinition Width="25"/>
+							<ColumnDefinition />
+							<ColumnDefinition Width="25" />
 						</Grid.ColumnDefinitions>
-						<Button x:Name="btnClose" Style="{StaticResource CloseBtnStyle}" Click="btnClose_Click" Grid.Column="1"/>
+						<Button x:Name="btnClose" Style="{StaticResource CloseBtnStyle}" Click="btnClose_Click" Grid.Column="1" />
 						<TextBlock Foreground="White" Grid.Row="1" Grid.ColumnSpan="2"
-						Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Popup}, Path=DataContext}"/>
+						Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Popup}, Path=DataContext}" />
 					</Grid>
-
 				</Border>
 			</Popup>
-			<TextBox x:Name="txtSubect" Grid.Row="1" Margin="6,2,6,0"/>
+			<TextBox x:Name="txtSubect" Grid.Row="1" Margin="6,2,6,0" />
 			<TextBox x:Name="txtMessage" Grid.Row="2" Margin="6,2,6,0"
 					 AcceptsReturn="True"	AcceptsTab="True" VerticalScrollBarVisibility="Visible">
 				<TextBox.ContextMenu>
 					<ContextMenu x:Name="msgContMenu">
-						<Separator/>
-						<MenuItem Header="Конвертировать в русский" Click="Convert_click"/>
-						<MenuItem Header="Конвертировать в английский" Click="Convert_click"/>
+						<Separator />
+						<MenuItem Header="Конвертировать в русский" Click="Convert_click" />
+						<MenuItem Header="Конвертировать в английский" Click="Convert_click" />
 					</ContextMenu>
 				</TextBox.ContextMenu>
 			</TextBox>
-			<StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center" >
+			<StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center">
 				<Button x:Name="btnSend" Click="btnSend_Click" Content="Послать"
-						Style="{DynamicResource MyButtonGlowStyle}" Height="25" Width="80"/>
+						Style="{DynamicResource MyButtonGlowStyle}" Height="25" Width="80" />
 				<Button x:Name="btnCancel" Content="Отмена" Style="{DynamicResource MyButtonGlowStyle}"
-						IsCancel="True" Height="25" Click="btnCancel_Click" Width="80"/>
+						IsCancel="True" Height="25" Click="btnCancel_Click" Width="80" />
 			</StackPanel>
 			<Expander x:Name="exp1" Margin="4,2,4,6" Grid.Row="4"
 					  Header="История сообщений" Expanded="exp1_Expanded"
@@ -112,7 +110,7 @@
 					<ListBox.ItemTemplate>
 						<DataTemplate>
 							<TextBlock Text="{Binding Path=Body}" TextWrapping="Wrap"
-									   MaxWidth="280"/>
+									   MaxWidth="280" />
 						</DataTemplate>
 					</ListBox.ItemTemplate>
 				</ListBox>

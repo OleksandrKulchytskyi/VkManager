@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows.Data;
 
 namespace WpfVkontacteClient.Converters
 {
-	public class BoolToOnlineStatusConverter:IValueConverter
+	public class BoolToOnlineStatusConverter : IValueConverter
 	{
 		#region IValueConverter Members
 
@@ -20,6 +17,6 @@ namespace WpfVkontacteClient.Converters
 			throw new NotImplementedException();
 		}
 
-		#endregion
+		#endregion IValueConverter Members
 	}
 }

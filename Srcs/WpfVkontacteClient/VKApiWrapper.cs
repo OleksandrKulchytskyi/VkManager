@@ -440,7 +440,6 @@ namespace WpfVkontacteClient
 				}
 			}
 
-			sb.Append("&");
 			sb.Append(accToken);
 
 			WebClient wc = new WebClient();
@@ -1882,21 +1881,26 @@ namespace WpfVkontacteClient
 					DataSet ds = new DataSet("tempDS");
 					StringReader sr = new StringReader(doc.InnerXml);
 					ds.ReadXml(sr, XmlReadMode.InferSchema);
-					List<UserMessage> messages = new List<UserMessage>();
+					List<UserMessage> messages = null;
 					if (ds.Tables["message"] != null && ds.Tables["message"].Rows.Count > 0)
 					{
+						messages = new List<UserMessage>(ds.Tables["message"].Rows.Count);
 						foreach (DataRow dr in ds.Tables["message"].Rows)
 						{
+							if (ds.Relations.Contains("message_attachment"))
+							{
+								DataRow[] rows = dr.GetChildRows(ds.Relations["message_attachment"]);
+								if (rows != null && rows.Length > 0)
+								{
+									messages.Add(new UserMessage(dr, rows[0]));
+								}
+							}
 							messages.Add(new UserMessage(dr));
 						}
 					}
 					return messages;
 				}
-				else
-				{
-					return null;
-				}
-
+				else return null;
 			}
 			return null;
 		}
@@ -2282,7 +2286,7 @@ namespace WpfVkontacteClient
 		/// <remarks>Long Poll подключение позволит Вам моментально узнавать о приходе новых сообщений и других событий. </remarks>
 		/// </summary>
 		/// <returns></returns>
-		public LongPollServerInfo GetLongPollServerInfo()
+		public LongPollServerInfo GetLongPollServerConnetInfo()
 		{
 			if (IsConnected && (Settings & ((int)VKSettings.ExMessages)) != 0)
 			{
@@ -2293,8 +2297,8 @@ namespace WpfVkontacteClient
 					server.Key = doc.SelectSingleNode("response/key/text()").Value;
 					server.Server = doc.SelectSingleNode("response/server/text()").Value;
 					long ts;
-					long.TryParse(doc.SelectSingleNode("response/ts/text()").Value, out ts);
-					server.Ts = ts;
+					if (long.TryParse(doc.SelectSingleNode("response/ts/text()").Value, out ts))
+						server.Ts = ts;
 					return server;
 				}
 				return null;

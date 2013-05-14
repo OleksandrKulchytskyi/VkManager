@@ -6,7 +6,7 @@
 		AllowsTransparency="True">
 	<Grid Margin="3">
 		<!--WINDOW RECT-->
-		<Rectangle Name="windowRect" RadiusX="16" RadiusY="16" Margin="2" Fill="{StaticResource windowBrush}" 
+		<Rectangle Name="windowRect" RadiusX="16" RadiusY="16" Margin="2" Fill="{StaticResource windowBrush}"
 				   Opacity="0.8" StrokeThickness="0" Stroke="{StaticResource sliderBrush}">
 			<Rectangle.BitmapEffect>
 				<DropShadowBitmapEffect></DropShadowBitmapEffect>
@@ -14,34 +14,33 @@
 		</Rectangle>
 
 		<!--WINDOW HEADER-->
-		<TextBlock Height="21" Margin="15,2,118,0" x:Name="headerLabel" VerticalAlignment="Top" 
-				FontSize="10" Foreground="{StaticResource sliderBrush}" FontWeight="Normal" 
-				Text="{Binding RelativeSource={RelativeSource  AncestorType=Window, Mode=FindAncestor},Path=Title}"/>
-		<Button Style="{StaticResource closeButton}" Height="11" HorizontalAlignment="Right" Margin="0,4,15,0" 
-				x:Name="closeButton" VerticalAlignment="Top" Width="11" 
-				Click="closeButton_Click" ToolTip="Close window" Content="Button"/>
+		<TextBlock Height="21" Margin="15,2,118,0" x:Name="headerLabel" VerticalAlignment="Top"
+				FontSize="10" Foreground="{StaticResource sliderBrush}" FontWeight="Normal"
+				Text="{Binding RelativeSource={RelativeSource  AncestorType=Window, Mode=FindAncestor},Path=Title}" />
+		<Button Style="{StaticResource closeButton}" Height="11" HorizontalAlignment="Right" Margin="0,4,15,0"
+				x:Name="closeButton" VerticalAlignment="Top" Width="11"
+				Click="closeButton_Click" ToolTip="Close window" Content="Button" />
 		<!--Main view-->
 		<Grid>
 			<Grid.RowDefinitions>
-				<RowDefinition Height="2.5*"/>
+				<RowDefinition Height="2.5*" />
 				<RowDefinition />
 			</Grid.RowDefinitions>
-			<Image x:Name="imgPreview" Margin="40,28,40,1"/>
+			<Image x:Name="imgPreview" Margin="40,28,40,1" />
 			<ListBox x:Name="lstComents" Grid.Row="1" Margin="20,3,20,5" ItemsSource="{Binding}">
 				<ListBox.Background>
 					<LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-						<GradientStop Color="LightBlue" Offset="0.1"/>
-						<GradientStop Color="Silver" Offset="0.5"/>
-						<GradientStop Color="LightBlue" Offset="0.9"/>
+						<GradientStop Color="LightBlue" Offset="0.1" />
+						<GradientStop Color="Silver" Offset="0.5" />
+						<GradientStop Color="LightBlue" Offset="0.9" />
 					</LinearGradientBrush>
 				</ListBox.Background>
 				<ListBox.ItemTemplate>
 					<DataTemplate>
-						<TextBlock Text="{Binding Comment}" MaxWidth="300" TextWrapping="Wrap"/>
+						<TextBlock Text="{Binding Comment}" MaxWidth="300" TextWrapping="Wrap" />
 					</DataTemplate>
 				</ListBox.ItemTemplate>
 			</ListBox>
-			
 		</Grid>
 	</Grid>
 </Window>

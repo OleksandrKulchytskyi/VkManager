@@ -1,15 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace WpfVkontacteClient.AdditionalWindow
 {
@@ -36,7 +26,7 @@ namespace WpfVkontacteClient.AdditionalWindow
 			this.Closing += new System.ComponentModel.CancelEventHandler(SelectUserWindow_Closing);
 		}
 
-		void SelectUserWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+		private void SelectUserWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
 		{
 			if (SelectedUser == null)
 				Application.Current.Shutdown();
@@ -80,7 +70,7 @@ namespace WpfVkontacteClient.AdditionalWindow
 				MessageBox.Show("Application Id не может быть пустым");
 				return;
 			}
-			
+
 			using (ConfigurationManager man = new ConfigurationManager())
 			{
 				UserData data = new UserData();
@@ -99,7 +89,6 @@ namespace WpfVkontacteClient.AdditionalWindow
 						 MessageBoxImage.Error);
 			}
 			Refresh();
-
 		}
 
 		private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -155,13 +144,11 @@ namespace WpfVkontacteClient.AdditionalWindow
 						this.Refresh();
 					}
 				}
-
 			}
 		}
 
 		private void btnEdit_Click(object sender, RoutedEventArgs e)
 		{
-
 		}
 	}
 }

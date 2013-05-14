@@ -277,12 +277,15 @@
                             <TextBlock Text="Тема сообщения"/>
                             <TextBox x:Name="txtMessageTitle" TextWrapping="Wrap"
 									 IsReadOnly="True"/>
-                            <TextBlock Text="Текст сообщения:"/>
+                            <TextBlock Text="Текст сообщения:" x:Name="lblMsgText"/>
                             <TextBox x:Name="txtMessageBody" TextWrapping="Wrap" AcceptsReturn="True" AcceptsTab="True"
 									 Height="70" VerticalScrollBarVisibility="Visible" IsReadOnly="True"/>
-                            <Button x:Name="btnMsgReply" Content="Ответить" Style="{DynamicResource MyButtonGlowStyle}"
+							<Button x:Name="btnGetMsgAttachmnt" Content="Просмотреть прикрепление" Style="{DynamicResource MyButtonGlowStyle}"
+									Width="162" Height="23" Click="btnMsgAttachment_Click" Visibility="Collapsed"/>
+							<Button x:Name="btnMsgReply" Content="Ответить" Style="{DynamicResource MyButtonGlowStyle}"
 									Width="65" Height="23" Click="btnMsgReply_Click"/>
-                        </StackPanel>
+							
+						</StackPanel>
                     </Grid>
                 </TabItem>
                 <TabItem x:Name="tiPhotos" Header="Фотографии">

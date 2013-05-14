@@ -1,15 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+﻿using System.Windows;
 
 namespace WpfVkontacteClient.AdditionalWindow
 {
@@ -41,13 +30,11 @@ namespace WpfVkontacteClient.AdditionalWindow
 
 			this.Closing += (s, e) =>
 				{
-					if (ProgramSettings != null)
-						ProgramSettings = null;
+					if (ProgramSettings != null) ProgramSettings = null;
 
 					(this.Owner as MainWindow).Focus();
 				};
 		}
-
 
 		private void btnSave_Click(object sender, RoutedEventArgs e)
 		{
@@ -56,7 +43,7 @@ namespace WpfVkontacteClient.AdditionalWindow
 				using (ConfigurationManager man = new ConfigurationManager())
 				{
 					if (man.SaveProgramSettings(ProgramSettings))
-						MessageBox.Show(this, "Настройки успешно изменены", string.Empty, MessageBoxButton.OK, MessageBoxImage.Information);
+						MessageBox.Show(this, "Настройки успешно изменены.", string.Empty, MessageBoxButton.OK, MessageBoxImage.Information);
 				}
 			}
 			this.Close();

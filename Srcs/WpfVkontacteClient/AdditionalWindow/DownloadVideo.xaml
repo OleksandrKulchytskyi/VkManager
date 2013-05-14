@@ -5,45 +5,44 @@
 		WindowStyle="None"	AllowsTransparency="True" Background="Transparent" Loaded="Window_Loaded"
 		Icon="/WpfVkontacteClient;component/Images/Media.ico">
 	<Grid Margin="3">
-		<Rectangle Name="windowRect" RadiusX="16" RadiusY="16" Margin="2" Fill="{StaticResource windowBrush}" 
+		<Rectangle Name="windowRect" RadiusX="16" RadiusY="16" Margin="2" Fill="{StaticResource windowBrush}"
 				   Opacity="0.8" StrokeThickness="0" Stroke="{StaticResource sliderBrush}">
 			<Rectangle.BitmapEffect>
 				<DropShadowBitmapEffect></DropShadowBitmapEffect>
 			</Rectangle.BitmapEffect>
-
 		</Rectangle>
 		<!--WINDOW HEADER-->
-		<Label Height="21" Margin="15,2,118,0" Name="headerLabel" VerticalAlignment="Top" 
-				FontSize="10" Foreground="{StaticResource sliderBrush}" FontWeight="Normal" 
+		<Label Height="21" Margin="15,2,118,0" Name="headerLabel" VerticalAlignment="Top"
+				FontSize="10" Foreground="{StaticResource sliderBrush}" FontWeight="Normal"
 				Content="{Binding RelativeSource={RelativeSource  AncestorType=Window, Mode=FindAncestor},Path=Title}"
-			   MouseLeftButtonDown="headerLabel_MouseLeftButtonDown"/>
-		<Button Style="{StaticResource closeButton}" Height="11" HorizontalAlignment="Right" Margin="0,4,15,0" 
-				x:Name="closeButton" VerticalAlignment="Top" Width="11" 
-				Click="closeButton_Click" ToolTip="Закрыть окно" Content="Button"/>
+			   MouseLeftButtonDown="headerLabel_MouseLeftButtonDown" />
+		<Button Style="{StaticResource closeButton}" Height="11" HorizontalAlignment="Right" Margin="0,4,15,0"
+				x:Name="closeButton" VerticalAlignment="Top" Width="11"
+				Click="closeButton_Click" ToolTip="Закрыть окно" Content="Button" />
 		<!--Main view-->
 		<Grid>
 			<Grid.RowDefinitions>
-				<RowDefinition Height="30"/>
+				<RowDefinition Height="30" />
 				<RowDefinition />
 			</Grid.RowDefinitions>
 			<ListView x:Name="lstVideo" Margin="6,0,6,10" ItemsSource="{Binding}"
 					 Grid.Row="1" VirtualizingStackPanel.IsVirtualizing="True">
 				<ListView.Resources>
-					<Style BasedOn="{StaticResource NewScrollBar}" TargetType="{x:Type ScrollViewer}"/>
+					<Style BasedOn="{StaticResource NewScrollBar}" TargetType="{x:Type ScrollViewer}" />
 				</ListView.Resources>
 				<ListView.View>
 					<GridView>
 						<GridViewColumn Width="150" Header="Название">
 							<GridViewColumn.CellTemplate>
 								<DataTemplate>
-									<TextBlock Margin="4" Text="{Binding Path=Title}"/>
+									<TextBlock Margin="4" Text="{Binding Path=Title}" />
 								</DataTemplate>
 							</GridViewColumn.CellTemplate>
 						</GridViewColumn>
 						<GridViewColumn Width="190" Header="Описание">
 							<GridViewColumn.CellTemplate>
 								<DataTemplate>
-									<TextBlock Margin="4" Text="{Binding Path=Description}"/>
+									<TextBlock Margin="4" Text="{Binding Path=Description}" />
 								</DataTemplate>
 							</GridViewColumn.CellTemplate>
 						</GridViewColumn>
@@ -52,14 +51,14 @@
 								<DataTemplate>
 									<ProgressBar Maximum="100" Minimum="0"
 										 x:Name="prgDownload" Height="15" MinWidth="80"
-										 Value="{Binding Percentage,Mode=TwoWay}"/>
+										 Value="{Binding Percentage,Mode=TwoWay}" />
 								</DataTemplate>
 							</GridViewColumn.CellTemplate>
 						</GridViewColumn>
 						<GridViewColumn Width="80" Header="Статус">
 							<GridViewColumn.CellTemplate>
 								<DataTemplate>
-									<TextBlock x:Name="txtStatus" Text="{Binding State, Mode=TwoWay}"/>
+									<TextBlock x:Name="txtStatus" Text="{Binding State, Mode=TwoWay}" />
 								</DataTemplate>
 							</GridViewColumn.CellTemplate>
 						</GridViewColumn>
@@ -67,15 +66,13 @@
 							<GridViewColumn.CellTemplate>
 								<DataTemplate>
 									<Image x:Name="imgThumb" Height="60" MinWidth="75"
-										 Source="{Binding Thumb}"/>
+										 Source="{Binding Thumb}" />
 								</DataTemplate>
 							</GridViewColumn.CellTemplate>
 						</GridViewColumn>
 					</GridView>
 				</ListView.View>
 			</ListView>
-
 		</Grid>
-
 	</Grid>
 </Window>

@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows.Data;
-using System.Windows.Media.Imaging;
-using System.IO;
-using System.Windows.Media;
 using System.Globalization;
+using System.IO;
+using System.Windows.Data;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace WpfVkontacteClient.Converters
 {
@@ -22,7 +19,7 @@ namespace WpfVkontacteClient.Converters
 			}
 			string url = (string)value;
 			byte[] photo = App.Current.ImageCacheInstance.GetImage(url);
-			
+
 			if (photo != null)
 			{
 				BitmapImage image = new BitmapImage();
@@ -36,7 +33,7 @@ namespace WpfVkontacteClient.Converters
 				//ManualResetEventSlim e=new ManualResetEventSlim(false);
 				BitmapImage image = null;
 				//byte[] array = null;
-				//ImageDownloader.DownloadImage(url, new Action<bool, byte[]>(                                   	
+				//ImageDownloader.DownloadImage(url, new Action<bool, byte[]>(
 				//                                    delegate(bool ok, byte[] bytes)
 				//                                        {
 				//                                            if (ok)

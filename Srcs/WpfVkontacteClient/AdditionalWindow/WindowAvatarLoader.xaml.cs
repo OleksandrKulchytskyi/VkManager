@@ -35,7 +35,7 @@ namespace WpfVkontacteClient.AdditionalWindow
 			prgDownloadsOverall.Maximum = FilesToDownload.Count;
 		}
 
-		void WindowAvatarLoader_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+		private void WindowAvatarLoader_Closing(object sender, System.ComponentModel.CancelEventArgs e)
 		{
 			if (m_webClient != null)
 				m_webClient.Dispose();
@@ -63,7 +63,7 @@ namespace WpfVkontacteClient.AdditionalWindow
 			}
 		}
 
-		void m_worker_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)
+		private void m_worker_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)
 		{
 			this.Dispatcher.BeginInvoke(new Action(() =>
 				{
@@ -71,7 +71,7 @@ namespace WpfVkontacteClient.AdditionalWindow
 				}));
 		}
 
-		void m_worker_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
+		private void m_worker_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
 		{
 			this.Dispatcher.BeginInvoke(new Action(() =>
 				{
@@ -82,7 +82,7 @@ namespace WpfVkontacteClient.AdditionalWindow
 			LoggingModule.Instance.WriteMessage(LoggingModule.Severity.Information, "Инициализация фотографий для кеша друзей завершена");
 		}
 
-		void m_worker_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
+		private void m_worker_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
 		{
 			foreach (long key in (e.Argument as Dictionary<long, string>).Keys)
 			{

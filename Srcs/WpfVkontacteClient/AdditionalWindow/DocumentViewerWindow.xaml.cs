@@ -12,7 +12,7 @@ namespace WpfVkontacteClient.AdditionalWindow
 	/// </summary>
 	public partial class DocumentViewerWindow : Window
 	{
-		GenericWeakReference<VKontakteApiWrapper> _vkWrapper = null;
+		private GenericWeakReference<VKontakteApiWrapper> _vkWrapper = null;
 
 		public DocumentViewerWindow(VKontakteApiWrapper wrapper)
 		{
@@ -39,7 +39,6 @@ namespace WpfVkontacteClient.AdditionalWindow
 		// Define a user friends
 		public static readonly DependencyProperty FriendsProperty =
 			DependencyProperty.Register("Friends", typeof(List<Friend>), typeof(PhotoViewerWindow), new UIPropertyMetadata(null));
-
 
 		private void cmbSource_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
@@ -72,7 +71,7 @@ namespace WpfVkontacteClient.AdditionalWindow
 			this.Closing += DocumentViewerWindow_Closing;
 		}
 
-		void DocumentViewerWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+		private void DocumentViewerWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
 		{
 			Friends = null;
 			_vkWrapper = null;

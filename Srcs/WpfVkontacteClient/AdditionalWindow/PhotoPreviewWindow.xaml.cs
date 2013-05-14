@@ -1,16 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using System.IO;
 using System.Net;
+using System.Windows;
+using System.Windows.Input;
+using System.Windows.Media.Imaging;
+using Utils.Helpers;
 
 namespace WpfVkontacteClient.AdditionalWindow
 {
@@ -31,77 +25,71 @@ namespace WpfVkontacteClient.AdditionalWindow
 			set;
 		}
 
-		//TODO: make this weak ref
-		protected VKontakteApiWrapper VkWrapper
-		{
-			get;
-			set;
-		}
+		private GenericWeakReference<VKontakteApiWrapper> _vkWrapperWeak;
+
 		public PhotoPreviewWindow(Entities.PhotoExteded photo, VKontakteApiWrapper wrapper)
 		{
 			InitializeComponent();
 
-			if (photo != null)
-				PhotoObj = photo;
+			if (photo != null) PhotoObj = photo;
 
 			if (wrapper != null)
-				this.VkWrapper = wrapper;
+				this._vkWrapperWeak = new GenericWeakReference<VKontakteApiWrapper>(wrapper);
 
-			CurrentFoto = System.IO.Path.Combine((Application.Current as App).AppFolder,
-				"Photo", System.IO.Path.GetFileName(photo.SourceBig));
+			CurrentFoto = Path.Combine((Application.Current as App).AppFolder, "Photo", Path.GetFileName(photo.SourceBig));
 
 			if (App.Current.ImageCacheInstance.IsCached(photo.SourceBig))
 				imgPreview.Source = PhotoObj.SourceBig.GetImage();
-
 			else
 			{
 				WebClient web = new WebClient();
 				web.DownloadDataAsync(new Uri(PhotoObj.SourceBig, UriKind.RelativeOrAbsolute));
-				web.DownloadDataCompleted += (s, e) =>
-					{
-						if (e.Error == null)
-							App.Current.ImageCacheInstance.SaveImage(PhotoObj.SourceBig, e.Result);
-					};
+				web.DownloadDataCompleted += web_DownloadDataCompleted;
 			}
 
 			if (!System.IO.File.Exists(CurrentFoto))
 			{
 				using (WebClient client = new WebClient())
 				{
-					//TODO: Unsubscribe from event here , potential memory leak
-					client.DownloadFileCompleted += (send, arg) =>
-						{
-							imgPreview.Source = new BitmapImage(new Uri(CurrentFoto,
-																		UriKind.RelativeOrAbsolute));
-						};
+					client.DownloadFileCompleted += client_DownloadFileCompleted;
 					client.DownloadFileAsync(new Uri(PhotoObj.SourceBig, UriKind.RelativeOrAbsolute), CurrentFoto);
 				}
-
 			}
 
 			this.Loaded += new RoutedEventHandler(PhotoPreviewWindow_Loaded);
 			headerLabel.MouseLeftButtonDown += new MouseButtonEventHandler(headerLabel_MouseLeftButtonDown);
 		}
 
-		void headerLabel_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+		private void web_DownloadDataCompleted(object sender, DownloadDataCompletedEventArgs e)
 		{
-			if (e.LeftButton == MouseButtonState.Pressed)
-				this.DragMove();
+			(sender as WebClient).DownloadDataCompleted -= web_DownloadDataCompleted;
+			if (e.Error == null)
+				App.Current.ImageCacheInstance.SaveImage(PhotoObj.SourceBig, e.Result);
 		}
 
-		void PhotoPreviewWindow_Loaded(object sender, RoutedEventArgs e)
+		private void client_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
 		{
-			lstComents.ItemsSource = VkWrapper.GetPhotoComments(PhotoObj.PhotoId.ToString(), PhotoObj.OwnerId.ToString(), null, null);
+			(sender as WebClient).DownloadFileCompleted -= client_DownloadFileCompleted;
+			imgPreview.Source = new BitmapImage(new Uri(CurrentFoto, UriKind.RelativeOrAbsolute));
+		}
+
+		private void headerLabel_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			if (e.LeftButton == MouseButtonState.Pressed) this.DragMove();
+		}
+
+		private void PhotoPreviewWindow_Loaded(object sender, RoutedEventArgs e)
+		{
+			lstComents.ItemsSource = _vkWrapperWeak.Target.GetPhotoComments(PhotoObj.PhotoId.ToString(), PhotoObj.OwnerId.ToString(), null, null);
 		}
 
 		private void closeButton_Click(object sender, RoutedEventArgs e)
 		{
 			headerLabel.MouseLeftButtonDown -= new MouseButtonEventHandler(headerLabel_MouseLeftButtonDown);
 			PhotoObj = null;
-			VkWrapper = null;
+			_vkWrapperWeak = null;
 			this.DialogResult = false;
-			GC.Collect();
-			GC.WaitForPendingFinalizers();
+
 			this.Close();
 		}
 	}

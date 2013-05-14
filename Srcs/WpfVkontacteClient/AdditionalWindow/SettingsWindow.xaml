@@ -5,34 +5,33 @@
 		WindowStyle="ToolWindow" x:Name="settingsWindow">
 	<Grid>
 		<Grid.ColumnDefinitions>
-
 		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
-			<RowDefinition/>
-			<RowDefinition Height="33"/>
+			<RowDefinition />
+			<RowDefinition Height="33" />
 		</Grid.RowDefinitions>
 		<StackPanel x:Name="stack1">
-			<TextBlock Text="Очищать временные файлы:" Margin="3,1,0,0"/>
+			<TextBlock Text="Очищать временные файлы:" Margin="3,1,0,0" />
 			<CheckBox x:Name="chkClearImageCache" Content="Изображения"
-					  Margin="3,0,0,0" IsChecked="{Binding Path=IsClearImageCache}"/>
-			<TextBlock Text="Максимальный размер временного файла для изображений (Кб):" Margin="3,1,0,0"/>
+					  Margin="3,0,0,0" IsChecked="{Binding Path=IsClearImageCache}" />
+			<TextBlock Text="Максимальный размер временного файла для изображений (Кб):" Margin="3,1,0,0" />
 			<TextBox x:Name="txtMaxCacheSize" Text="{Binding Path=ImageCacheMaxSize}"
-					 Margin="3,1,3,0" Width="90" HorizontalAlignment="Left"/>
-			<TextBlock Text="Максимальный размер временного файла для данных (Кб):" Margin="3,1,0,0"/>
+					 Margin="3,1,3,0" Width="90" HorizontalAlignment="Left" />
+			<TextBlock Text="Максимальный размер временного файла для данных (Кб):" Margin="3,1,0,0" />
 			<TextBox x:Name="txtMaxDataCacheSize" Text="{Binding Path=DataCacheMaxSize}"
-					 Margin="3,1,3,0" Width="90" HorizontalAlignment="Left"/>
-			<TextBlock Text="Уведомлять о новых собщениях:" Margin="3,1,0,0"/>
+					 Margin="3,1,3,0" Width="90" HorizontalAlignment="Left" />
+			<TextBlock Text="Уведомлять о новых собщениях:" Margin="3,1,0,0" />
 			<CheckBox x:Name="chkNewMsg" Content="Уведомление"
-					  Margin="3,0,0,0" IsChecked="{Binding Path=DetermineNewMessages}"/>
+					  Margin="3,0,0,0" IsChecked="{Binding Path=DetermineNewMessages}" />
 		</StackPanel>
-		<StackPanel Grid.Row="1" Orientation="Horizontal" 
+		<StackPanel Grid.Row="1" Orientation="Horizontal"
 					HorizontalAlignment="Center">
 			<Button x:Name="btnSave" Click="btnSave_Click"
 					Content="Сохранить" Width="70"
-					Style="{DynamicResource MyButtonGlowStyle}"/>
+					Style="{DynamicResource MyButtonGlowStyle}" />
 			<Button x:Name="btnExit" Click="btnExit_Click"
 					Content="Выход" Width="70" IsCancel="True"
-					Style="{DynamicResource MyButtonGlowStyle}"/>
+					Style="{DynamicResource MyButtonGlowStyle}" />
 		</StackPanel>
 	</Grid>
 </Window>

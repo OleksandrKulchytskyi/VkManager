@@ -5,12 +5,12 @@
 		WindowStyle="ToolWindow" Loaded="Window_Loaded">
 	<Grid>
 		<Grid.RowDefinitions>
-			<RowDefinition/>
-			<RowDefinition/>
+			<RowDefinition />
+			<RowDefinition />
 		</Grid.RowDefinitions>
-		<TextBox Grid.Row="0" Margin="3,2,0,0" x:Name="txtProgress"/>
+		<TextBox Grid.Row="0" Margin="3,2,0,0" x:Name="txtProgress" />
 		<StackPanel Grid.Row="1">
-			<ProgressBar x:Name="prgDownloadsOverall" Height="18"/>
+			<ProgressBar x:Name="prgDownloadsOverall" Height="18" />
 		</StackPanel>
 	</Grid>
 </Window>

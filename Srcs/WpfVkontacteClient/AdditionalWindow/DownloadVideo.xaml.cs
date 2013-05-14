@@ -1,17 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using WpfVkontacteClient.Entities;
-using System.Net;
 
 namespace WpfVkontacteClient.AdditionalWindow
 {
@@ -20,7 +12,7 @@ namespace WpfVkontacteClient.AdditionalWindow
 	/// </summary>
 	public partial class DownloadVideo : Window
 	{
-		AsyncDownloader loader = null;
+		private AsyncDownloader loader = null;
 
 		public DownloadVideo(List<UserVideo> videos)
 		{
@@ -111,12 +103,11 @@ namespace WpfVkontacteClient.AdditionalWindow
 			loader.Download();
 		}
 
-		void loader_ProgressChanged(object sender, EventArgs e)
+		private void loader_ProgressChanged(object sender, EventArgs e)
 		{
-
 		}
 
-		void loader_DownloadingComplete(object sender, EventArgs e)
+		private void loader_DownloadingComplete(object sender, EventArgs e)
 		{
 			MessageBox.Show("Loading complete");
 		}

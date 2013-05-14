@@ -3,9 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:contr="clr-namespace:WPFMediaKit.DirectShow.Controls;assembly=WPFMediaKit"
         Title="WebCamWindow" Height="300" Width="300">
-    <Grid>
-        <contr:VideoCaptureElement x:Name="webCamElement" LoadedBehavior="Play" DesiredPixelWidth="400"
+	<Grid>
+		<contr:VideoCaptureElement x:Name="webCamElement" LoadedBehavior="Play" DesiredPixelWidth="400"
                                    DesiredPixelHeight="350" Stretch="Fill" FPS="27" VideoCaptureSource="{Binding Path=DeviceName, Mode=TwoWay}"
-                                   VideoCaptureDevice="{Binding Path=DeviceName, Mode=TwoWay}"/>
-    </Grid>
+                                   VideoCaptureDevice="{Binding Path=DeviceName, Mode=TwoWay}" />
+	</Grid>
 </Window>

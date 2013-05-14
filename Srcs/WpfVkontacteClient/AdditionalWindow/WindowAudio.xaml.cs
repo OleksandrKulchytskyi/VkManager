@@ -14,7 +14,7 @@ namespace WpfVkontacteClient.AdditionalWindow
 		private WebClient client = null;
 		protected bool IsClosingWind = false;
 		protected UserAudio userAudio;
-		MediaPlayer player = new MediaPlayer();
+		private MediaPlayer player = new MediaPlayer();
 
 		public string CurrentAudio
 		{
@@ -42,40 +42,8 @@ namespace WpfVkontacteClient.AdditionalWindow
 
 		private void Window_Loaded(object sender, RoutedEventArgs e)
 		{
-			client.DownloadProgressChanged += (send, arg) =>
-				{
-					prgAudio.Value = arg.ProgressPercentage;
-					if (this.IsClosingWind)
-						(send as WebClient).CancelAsync();
-				};
-
-			client.DownloadDataCompleted += (send, arg) =>
-				{
-					if (arg.Error == null)
-					{
-						App.Current.DataCache.SaveData(userAudio.Url, arg.Result);
-						if (!string.IsNullOrEmpty(arg.UserState.ToString()))
-						{
-							System.IO.FileInfo fi = new System.IO.FileInfo(arg.UserState.ToString());
-							if (fi.Exists)
-							{
-								fi.Attributes = System.IO.FileAttributes.Normal;
-								fi.Delete();
-							}
-							else
-							{
-								System.IO.FileStream fs =fi.Create();
-								fs.Write(arg.Result, 0, (int)arg.Result.LongLength);
-								fs.Flush();
-								if (fs != null)
-								{
-									fs.Close();
-									fs.Dispose();
-								}
-							}
-						}
-					}
-				};
+			client.DownloadProgressChanged += client_DownloadProgressChanged;
+			client.DownloadDataCompleted += client_DownloadDataCompleted;
 
 			CurrentAudio = System.IO.Path.Combine((Application.Current as App).AppFolder, "Audio",
 													System.IO.Path.GetFileName(userAudio.Url));
@@ -102,26 +70,55 @@ namespace WpfVkontacteClient.AdditionalWindow
 				prgAudio.Value = 100;
 				player.Open(new Uri(CurrentAudio, UriKind.RelativeOrAbsolute));
 			}
+		}
 
+		private void client_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs arg)
+		{
+			prgAudio.Value = arg.ProgressPercentage;
+			if (this.IsClosingWind) (sender as WebClient).CancelAsync();
+		}
+
+		private void client_DownloadDataCompleted(object sender, DownloadDataCompletedEventArgs e)
+		{
+			if (e.Error == null && !e.Cancelled)
+			{
+				App.Current.DataCache.SaveData(userAudio.Url, e.Result);
+				if (!string.IsNullOrEmpty(e.UserState.ToString()))
+				{
+					System.IO.FileInfo fi = new System.IO.FileInfo(e.UserState.ToString());
+					if (fi.Exists)
+					{
+						fi.Attributes = System.IO.FileAttributes.Normal;
+						fi.Delete();
+					}
+					else
+					{
+						System.IO.FileStream fs = fi.Create();
+						fs.Write(e.Result, 0, (int)e.Result.LongLength);
+						fs.Flush();
+						if (fs != null)
+						{
+							fs.Close();
+							fs.Dispose();
+						}
+					}
+				}
+			}
 		}
 
 		private void btnPlay_Click(object sender, RoutedEventArgs e)
 		{
-			if (!player.IsNull())
-				player.Play();
+			if (!player.IsNull()) player.Play();
 		}
-
 
 		private void btnStop_Click(object sender, RoutedEventArgs e)
 		{
-			if (!player.IsNull())
-				player.Stop();
+			if (!player.IsNull()) player.Stop();
 		}
 
 		private void btnPause_Click(object sender, RoutedEventArgs e)
 		{
-			if (player.CanPause)
-				player.Pause();
+			if (player.CanPause) player.Pause();
 		}
 
 		private void slderVolume_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -135,8 +132,10 @@ namespace WpfVkontacteClient.AdditionalWindow
 			IsClosingWind = true;
 			if (!client.IsNull())
 			{
-				if (client.IsBusy)
-					client.CancelAsync();
+				if (client.IsBusy) client.CancelAsync();
+				client.DownloadDataCompleted -= client_DownloadDataCompleted;
+				client.DownloadProgressChanged -= client_DownloadProgressChanged;
+				client.Dispose();
 				client = null;
 			}
 
@@ -148,12 +147,8 @@ namespace WpfVkontacteClient.AdditionalWindow
 			}
 
 			if (!string.IsNullOrEmpty(CurrentAudio))
-			{
 				System.IO.File.Delete(CurrentAudio);
-			}
 
-			GC.Collect();
-			GC.WaitForPendingFinalizers();
 			DialogResult = false;
 		}
 	}

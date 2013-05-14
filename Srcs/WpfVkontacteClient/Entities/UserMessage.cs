@@ -6,106 +6,121 @@ namespace WpfVkontacteClient.Entities
 {
 	public class UserMessage
 	{
-		private string m_body;
+		public UserMessage(DataRow row)
+		{
+			if (row.Table.Columns.Contains("mid"))
+				long.TryParse(row["mid"].ToString(), out this._messageId);
 
+			if (row.Table.Columns.Contains("uid"))
+				long.TryParse(row["uid"].ToString(), out this._uid);
+
+			if (row.Table.Columns.Contains("body"))
+				this._body = row["body"].ToString().EscapeXmlString();
+
+			if (row.Table.Columns.Contains("title"))
+				this._title = row["title"].ToString();
+
+			if (row.Table.Columns.Contains("date"))
+				this._date = row["date"].ToString();
+
+			if (row.Table.Columns.Contains("read_state"))
+				this._state = Extension.FromStringToBool(row["read_state"].ToString());
+
+			if (row.Table.Columns.Contains("out"))
+				this._out = row["out"].ToString();
+		}
+
+		public UserMessage(DataRow rowMsg, DataRow attachment)
+			: this(rowMsg)
+		{
+			if (attachment != null)
+			{
+				HasAttachment = true;
+				AttachmentType = attachment[0] as string;
+			}
+		}
+
+		private string _body;
 		public string MessageBody
 		{
 			get
 			{
-				return m_body;
+				return _body;
 			}
 		}
 
-		private string m_title;
-
+		private string _title;
 		public string MessageTitle
 		{
 			get
 			{
-				return m_title;
+				return _title;
 			}
 		}
 
-		private long m_messageId;
-
+		private long _messageId;
 		public long MessageId
 		{
 			get
 			{
-				return m_messageId;
+				return _messageId;
 			}
 		}
 
-		private long m_uid;
+		private long _uid;
 
 		public long UserId
 		{
 			get
 			{
-				return m_uid;
+				return _uid;
 			}
 		}
 
-		private bool m_state;
+		private bool _state;
 
 		public bool ReadState
 		{
 			get
 			{
-				return m_state;
+				return _state;
 			}
-			set { m_state = value; }
+			set { _state = value; }
 		}
 
-		private string m_date;
-
+		private string _date;
 		public DateTime Date
 		{
 			get
 			{
-				return Utils.DateTimeUtils.ConvertFromUnixTimestamp(double.Parse(m_date));
+				return Utils.DateTimeUtils.ConvertFromUnixTimestamp(double.Parse(_date));
 			}
 		}
 
-		private string m_out;
-
+		private string _out;
 		public string Out
 		{
-			get
-			{
-				return m_out;
-			}
+			get { return _out; }
 		}
 
-		public UserMessage(DataRow row)
+		private bool _hasAttachment;
+		public bool HasAttachment
 		{
-			if (row.Table.Columns.Contains("mid"))
-				long.TryParse(row["mid"].ToString(), out this.m_messageId);
-
-			if (row.Table.Columns.Contains("uid"))
-				long.TryParse(row["uid"].ToString(), out this.m_uid);
-
-			if (row.Table.Columns.Contains("body"))
-				this.m_body = row["body"].ToString().EscapeXmlString();
-
-			if (row.Table.Columns.Contains("title"))
-				this.m_title = row["title"].ToString();
-
-			if (row.Table.Columns.Contains("date"))
-				this.m_date = row["date"].ToString();
-
-			if (row.Table.Columns.Contains("read_state"))
-				this.m_state = Extension.FromStringToBool(row["read_state"].ToString());
-
-			if (row.Table.Columns.Contains("out"))
-			{
-				this.m_out = row["out"].ToString();
-			}
+			get { return _hasAttachment; }
+			set { _hasAttachment = value; }
 		}
+
+		private string _attachmentType;
+		public string AttachmentType
+		{
+			get { return _attachmentType; }
+			set { _attachmentType = value; }
+		}
+
 
 		public override string ToString()
 		{
-			return string.Format("{0} \r\n {1}", m_title, m_body);
+			return string.Format("{0} \r\n {1}", _title, _body);
 		}
 	}
 }

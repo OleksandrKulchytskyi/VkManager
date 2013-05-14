@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows.Data;
-using System.Windows.Media.Imaging;
-using System.IO;
 using System.Globalization;
+using System.IO;
+using System.Windows.Data;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace WpfVkontacteClient.Converters
 {
@@ -39,7 +36,6 @@ namespace WpfVkontacteClient.Converters
 			source.StreamSource.Read(ret, 0, ret.Length);
 			return ret;
 		}
-
 
 		public static BytesToImageConverter Instance = new BytesToImageConverter();
 	}

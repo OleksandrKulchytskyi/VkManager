@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows.Data;
 
 namespace WpfVkontacteClient.Converters
 {
-	public class BoolToVisibility:IValueConverter
+	public class BoolToVisibility : IValueConverter
 	{
 		public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
 		{
@@ -23,7 +20,7 @@ namespace WpfVkontacteClient.Converters
 	{
 		public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
 		{
-			return ((bool)value) == true ? false: true;
+			return ((bool)value) == true ? false : true;
 		}
 
 		public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)

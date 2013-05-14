@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+using Utils.Helpers;
 using WpfVkontacteClient.Entities;
 
 namespace WpfVkontacteClient
@@ -11,8 +12,7 @@ namespace WpfVkontacteClient
 	/// </summary>
 	public partial class PhotoViewerWindow : Window
 	{
-		//TODO: make this weak ref
-		VKontakteApiWrapper m_wrapper = null;
+		private GenericWeakReference<VKontakteApiWrapper> _wrapperWeak = null;
 
 		public PhotoViewerWindow(VKontakteApiWrapper wrapper)
 		{
@@ -21,18 +21,18 @@ namespace WpfVkontacteClient
 
 			if (wrapper == null)
 				throw new ArgumentNullException("wrapper");
-			m_wrapper = wrapper;
+			_wrapperWeak = new GenericWeakReference<VKontakteApiWrapper>(wrapper);
 		}
 
 		private void Window_Loaded(object sender, RoutedEventArgs e)
 		{
-			cmbAlbums.ItemsSource = m_wrapper.GetUserAlbum(null, null);
+			cmbAlbums.ItemsSource = _wrapperWeak.Target.GetUserAlbum(null, null);
 		}
 
-		void PhotoViewerWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+		private void PhotoViewerWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
 		{
-			GC.Collect();
-			GC.WaitForPendingFinalizers();
+			_wrapperWeak = null;
+			Friends = null;
 		}
 
 		public PhotoViewerWindow(VKontakteApiWrapper wrapper, List<Friend> friends)
@@ -53,7 +53,6 @@ namespace WpfVkontacteClient
 		public static readonly DependencyProperty FriendsProperty =
 			DependencyProperty.Register("Friends", typeof(List<Friend>), typeof(PhotoViewerWindow), new UIPropertyMetadata(null));
 
-
 		private void cmbSource_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
 			if (!IsInitialized)
@@ -68,7 +67,7 @@ namespace WpfVkontacteClient
 			{
 				txtFriends.Visibility = System.Windows.Visibility.Collapsed;
 				cmbFriends.Visibility = System.Windows.Visibility.Collapsed;
-				cmbAlbums.ItemsSource = m_wrapper.GetUserAlbum(null, null);
+				cmbAlbums.ItemsSource = _wrapperWeak.Target.GetUserAlbum(null, null);
 			}
 		}
 
@@ -76,7 +75,7 @@ namespace WpfVkontacteClient
 		{
 			if ((cmbFriends.SelectedItem as Friend) != null)
 			{
-				cmbAlbums.ItemsSource = m_wrapper.GetUserAlbum((cmbFriends.SelectedItem as Friend).UserId.ToString(), null);
+				cmbAlbums.ItemsSource = _wrapperWeak.Target.GetUserAlbum((cmbFriends.SelectedItem as Friend).UserId.ToString(), null);
 			}
 		}
 
@@ -85,10 +84,10 @@ namespace WpfVkontacteClient
 			if ((cmbAlbums.SelectedItem as UserAlbum) != null)
 			{
 				if ((cmbFriends.SelectedItem as Friend) != null)
-					carouselContr.ItemsSource = m_wrapper.GetPhotosFromAlbum((cmbFriends.SelectedItem as Friend).UserId.ToString(),
+					carouselContr.ItemsSource = _wrapperWeak.Target.GetPhotosFromAlbum((cmbFriends.SelectedItem as Friend).UserId.ToString(),
 												(cmbAlbums.SelectedItem as UserAlbum).AlbumId.ToString(), null);
 				else
-					carouselContr.ItemsSource = m_wrapper.GetPhotosFromAlbum(m_wrapper.UserId.ToString(),
+					carouselContr.ItemsSource = _wrapperWeak.Target.GetPhotosFromAlbum(_wrapperWeak.Target.UserId.ToString(),
 													(cmbAlbums.SelectedItem as UserAlbum).AlbumId.ToString(), null);
 			}
 		}

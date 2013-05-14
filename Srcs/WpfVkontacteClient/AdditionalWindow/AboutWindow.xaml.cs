@@ -21,6 +21,22 @@ namespace WpfVkontacteClient
 		public AboutWindow()
 		{
 			InitializeComponent();
+			Run obj=null;
+			foreach (var item in txtAppDescription.Inlines)
+			{
+				if ((item as System.Windows.Documents.Run) == null)
+					continue;
+				else
+				{
+					if ((item as Run).Text.IndexOf("[v]") != -1)
+					{
+						obj = (item as Run);
+						break;
+					}
+				}
+			}
+			if (obj != null)
+				obj.Text = obj.Text.Replace("[v]", typeof(AboutWindow).Assembly.GetName().Version.ToString());
 		}
 
 		private void closeButton_Click(object sender, RoutedEventArgs e)

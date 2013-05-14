@@ -285,7 +285,7 @@ namespace WpfVkontacteClient
 
 				if ((Application.Current as App).ProgramSettings.DetermineNewMessages)
 				{
-					LongPollInfo = wrapper.GetLongPollServerInfo();
+					LongPollInfo = wrapper.GetLongPollServerConnetInfo();
 
 					m_timer = new DispatcherTimer();
 					m_timer.Interval = new TimeSpan(0, 0, 22);
@@ -297,7 +297,7 @@ namespace WpfVkontacteClient
 			{
 				LoggingModule.Instance.WriteMessage(LoggingModule.Severity.Error, "User logging error", UserSettings.UserName);
 
-				MessageBox.Show("Вы не автоизировались на сервере Вконтакте.", "Ошибка",
+				MessageBox.Show(this, "Вы не автоизировались на сервере Вконтакте.", "Ошибка",
 					MessageBoxButton.OK, MessageBoxImage.Error);
 			}
 		}
@@ -507,7 +507,14 @@ namespace WpfVkontacteClient
 					txtMessFio.Text = currentUser.ToString();
 					txtMessageSex.Text = Extension.StringToSex(currentUser.Sex);
 					txtMessageTitle.Text = (messagesInput.SelectedItem as UserMessage).MessageTitle.EscapeXmlString();
-					txtMessageBody.Text = (messagesInput.SelectedItem as UserMessage).MessageBody.EscapeXmlString();
+
+					txtMessageBody.Visibility = currentMessage.HasAttachment ? System.Windows.Visibility.Collapsed : System.Windows.Visibility.Visible;
+					lblMsgText.Visibility = txtMessageBody.Visibility;
+					btnGetMsgAttachmnt.Visibility = currentMessage.HasAttachment ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
+
+					if (txtMessageBody.Visibility == System.Windows.Visibility.Visible)
+						txtMessageBody.Text = (messagesInput.SelectedItem as UserMessage).MessageBody.EscapeXmlString();
+
 					BitmapImage img = new BitmapImage(new Uri(currentUser.PhotoMediumUrl, UriKind.RelativeOrAbsolute));
 					imgFriendMes.Source = img;
 				}
@@ -526,6 +533,11 @@ namespace WpfVkontacteClient
 			else
 				MessageBox.Show(this, "Выберите пользователя которому необходимо отправить сообщение!", "!!!",
 					 MessageBoxButton.OK, MessageBoxImage.Information);
+		}
+
+		private void btnMsgAttachment_Click(object sender, RoutedEventArgs e)
+		{
+
 		}
 
 		private void MarkAsRead_Click(object sender, RoutedEventArgs e)
