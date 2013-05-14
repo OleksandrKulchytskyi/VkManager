@@ -19,7 +19,6 @@ namespace Carousel
 		RightCenter, BottomLeft, BottomCenter, BottomRight
 	};
 
-
 	/// <summary>
 	/// The Carousel itself is based on PathListBox and PathListBoxUtils 
 	/// using the codeplex available PathListBoxutils
@@ -52,7 +51,6 @@ namespace Carousel
 			int v = (int)value;
 			return (!v.Equals(int.MinValue) && !v.Equals(int.MaxValue));
 		}
-
 
 		private void SetButtonPosition(ButtonPosition buttonPosition)
 		{
@@ -154,9 +152,7 @@ namespace Carousel
 			trans.ScaleRange = ScaleRange;
 			trans.AngleRange = AngleRange;
 			transformers.Add(trans);
-
 		}
-
 
 		/// <summary>
 		/// The pathListBox transitioning did not seem to work when I used an ICommand
@@ -164,7 +160,8 @@ namespace Carousel
 		/// </summary>
 		private void PreviousButton_Click(object sender, RoutedEventArgs e)
 		{
-			if (pathListBox.ItemsSource == null || (pathListBox.Items.Count == 0))
+			if (pathListBox.ItemsSource == null ||
+				(pathListBox.Items.Count == 0))
 				return;
 
 			if (pathListBox.SelectedIndex > 0)
@@ -173,6 +170,7 @@ namespace Carousel
 			}
 			else
 			{
+				if ((pathListBox.Items.Count - 1) < 0) return;
 				pathListBox.SelectedIndex = pathListBox.Items.Count - 1;
 			}
 
