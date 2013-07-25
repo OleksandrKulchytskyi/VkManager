@@ -481,7 +481,7 @@ namespace WpfVkontacteClient
 					System.IO.StringReader xmlSR = new System.IO.StringReader(doc.InnerXml);
 					ds.ReadXml(xmlSR, XmlReadMode.InferSchema);
 					List<OnlineFriends> friends = new List<OnlineFriends>();
-
+					if (ds.Tables["uid"].IsNull()) return friends;
 					foreach (DataRow dr in ds.Tables["uid"].Rows)
 					{
 						friends.Add(new OnlineFriends(dr));
@@ -572,6 +572,7 @@ namespace WpfVkontacteClient
 					System.IO.StringReader xmlSR = new System.IO.StringReader(doc.InnerXml);
 					ds.ReadXml(xmlSR, XmlReadMode.InferSchema);
 					List<Friend> friends = new List<Friend>();
+					if (ds.Tables["user"].IsNull()) return friends;
 					foreach (DataRow dr in ds.Tables["user"].Rows)
 					{
 						friends.Add(new Friend(dr));
@@ -627,6 +628,9 @@ namespace WpfVkontacteClient
 					StringReader sr = new StringReader(doc.InnerXml);
 					ds.ReadXml(sr, XmlReadMode.InferSchema);
 					List<FriendGroup> groups = new List<FriendGroup>();
+					if (!ds.Tables.Contains("list"))
+						return groups;
+
 					foreach (DataRow dr in ds.Tables["list"].Rows)
 					{
 						groups.Add(new FriendGroup(dr));
@@ -686,6 +690,8 @@ namespace WpfVkontacteClient
 					DataSet ds = new DataSet();
 					StringReader sr = new StringReader(doc.InnerXml);
 					ds.ReadXml(sr, XmlReadMode.InferSchema);
+					if (!ds.Tables.Contains("user"))
+						return null;
 					return new UserInfos(ds.Tables["user"].Rows[0]);
 				}
 				return null;
@@ -708,6 +714,7 @@ namespace WpfVkontacteClient
 					DataSet ds = new DataSet();
 					System.IO.StringReader xmlSR = new System.IO.StringReader(doc.InnerXml);
 					ds.ReadXml(xmlSR, XmlReadMode.InferSchema);
+					if (ds.Tables["uid"].IsNull()) return string.Empty;
 					Entities.BalanceInfo balance = new Entities.BalanceInfo(ds.Tables["uid"].Rows[0]);
 					return balance.Balance;
 				}
@@ -770,6 +777,8 @@ namespace WpfVkontacteClient
 					System.IO.StringReader sr = new StringReader(doc.InnerXml);
 					ds.ReadXml(sr, XmlReadMode.InferSchema);
 					List<Entities.UserGroup> groups = new List<UserGroup>();
+					if (!ds.Tables.Contains("group"))
+						return groups;
 					foreach (DataRow dr in ds.Tables["group"].Rows)
 					{
 						groups.Add(new UserGroup(dr));
@@ -854,9 +863,7 @@ namespace WpfVkontacteClient
 				param.Add(new VKParameter("text", text));
 				XmlDocument doc = this.ExecuteMethodByToken("activity.set", param);
 				if (!this.HasError(doc))
-				{
 					return long.Parse(doc.SelectSingleNode("response/text()").Value);
-				}
 				else
 				{
 					VKErrorInfo info = this.GetErrorContent(doc);
@@ -885,6 +892,7 @@ namespace WpfVkontacteClient
 					StringReader sr = new StringReader(doc.InnerXml);
 					ds.ReadXml(sr, XmlReadMode.InferSchema);
 					List<ActivityInfo> list = new List<ActivityInfo>();
+					if (!ds.Tables.Contains("activity")) return list;
 					foreach (DataRow row in ds.Tables["activity"].Rows)
 					{
 						ActivityInfo activity = new ActivityInfo();
@@ -934,6 +942,8 @@ namespace WpfVkontacteClient
 					StringReader sr = new StringReader(doc.InnerXml);
 					ds.ReadXml(sr, XmlReadMode.InferSchema);
 					List<ActivityInfo> list = new List<ActivityInfo>();
+					if (!ds.Tables.Contains("activity"))
+						return list;
 					foreach (DataRow row in ds.Tables["activity"].Rows)
 					{
 						ActivityInfo activity = new ActivityInfo();
@@ -1043,6 +1053,8 @@ namespace WpfVkontacteClient
 					StringReader sr = new StringReader(doc.InnerXml);
 					ds.ReadXml(sr, XmlReadMode.InferSchema);
 					List<UserPhoto> photos = new List<UserPhoto>();
+					if (!ds.Tables.Contains("photo"))
+						return photos;
 					foreach (DataRow row in ds.Tables["photo"].Rows)
 					{
 						photos.Add(new UserPhoto(row));
@@ -1085,6 +1097,7 @@ namespace WpfVkontacteClient
 					StringReader sr = new StringReader(doc.InnerXml);
 					ds.ReadXml(sr, XmlReadMode.InferSchema);
 					var data = new List<UserComment>();
+
 					if (!ds.Tables["comment"].IsNull() && ds.Tables["comment"].Rows.Count > 0)
 					{
 						foreach (DataRow row in ds.Tables["comment"].Rows)
@@ -1126,7 +1139,7 @@ namespace WpfVkontacteClient
 					StringReader sr = new StringReader(doc.InnerXml);
 					ds.ReadXml(sr, XmlReadMode.InferSchema);
 					var data = new List<UserPhoto>();
-					if (ds.Tables["photo"].Rows.Count == 0)
+					if (ds.Tables["photo"].IsNull() || ds.Tables["photo"].Rows.Count == 0)
 						return data;
 					foreach (DataRow row in ds.Tables["photo"].Rows)
 					{
@@ -1160,7 +1173,7 @@ namespace WpfVkontacteClient
 					StringReader sr = new StringReader(doc.InnerXml);
 					ds.ReadXml(sr, XmlReadMode.InferSchema);
 					var data = new List<PhotoExteded>();
-					if (ds.Tables["photo"].Rows.Count == 0)
+					if (ds.Tables["photo"].IsNull() || ds.Tables["photo"].Rows.Count == 0)
 						return data;
 					foreach (DataRow row in ds.Tables["photo"].Rows)
 					{
@@ -1198,7 +1211,7 @@ namespace WpfVkontacteClient
 					StringReader sr = new StringReader(doc.InnerXml);
 					ds.ReadXml(sr, XmlReadMode.InferSchema);
 					List<PhotoExteded> photos = new List<PhotoExteded>();
-					if (ds.Tables["photo"] != null && ds.Tables["photo"].Rows.Count > 0)
+					if (!ds.Tables["photo"].IsNull() && ds.Tables["photo"].Rows.Count > 0)
 					{
 						foreach (DataRow dr in ds.Tables["photo"].Rows)
 						{
@@ -1305,7 +1318,7 @@ namespace WpfVkontacteClient
 					var ds = new DataSet();
 					StringReader sr = new StringReader(doc.InnerXml);
 					ds.ReadXml(sr, XmlReadMode.InferSchema);
-					if (ds.Tables["album"].Rows[0] != null)
+					if (ds.Tables["album"] != null && ds.Tables["album"].Rows[0] != null)
 						return new UserAlbum(ds.Tables["album"].Rows[0]);
 				}
 				return null;
@@ -2430,6 +2443,8 @@ namespace WpfVkontacteClient
 					ds.ReadXml(sr, XmlReadMode.InferSchema);
 
 					List<UserComment> comments = new List<UserComment>();
+					if (ds.Tables["comment"].IsNull())
+						return comments;
 					foreach (DataRow dr in ds.Tables["comment"].Rows)
 					{
 						comments.Add(new UserComment(dr));
@@ -2587,6 +2602,7 @@ namespace WpfVkontacteClient
 					ds.ReadXml(sr, XmlReadMode.InferSchema);
 
 					List<UserNote> comments = new List<UserNote>();
+					if (ds.Tables["note"].IsNull()) return comments;
 					foreach (DataRow dr in ds.Tables["note"].Rows)
 					{
 						comments.Add(new UserNote(dr));
@@ -2697,6 +2713,7 @@ namespace WpfVkontacteClient
 					ds.ReadXml(sr, XmlReadMode.InferSchema);
 
 					List<UserNote> comments = new List<UserNote>();
+					if (ds.Tables["note"].IsNull()) return comments;
 					foreach (DataRow dr in ds.Tables["note"].Rows)
 					{
 						comments.Add(new UserNote(dr));
@@ -2737,6 +2754,7 @@ namespace WpfVkontacteClient
 					ds.ReadXml(sr, XmlReadMode.InferSchema);
 
 					List<UserComment> comments = new List<UserComment>();
+					if (ds.Tables["comment"].IsNull()) return comments;
 					foreach (DataRow dr in ds.Tables["comment"].Rows)
 					{
 						comments.Add(new UserComment(dr));
@@ -2834,6 +2852,7 @@ namespace WpfVkontacteClient
 					ds.ReadXml(sr, XmlReadMode.InferSchema);
 
 					List<UserDocument> docs = new List<UserDocument>();
+					if (ds.Tables["doc"].IsNull()) return docs;
 					foreach (DataRow dr in ds.Tables["doc"].Rows)
 					{
 						docs.Add(new UserDocument(dr));
@@ -2893,6 +2912,7 @@ namespace WpfVkontacteClient
 					ds.ReadXml(sr, XmlReadMode.InferSchema);
 
 					List<UserDocument> docList = new List<UserDocument>();
+					if (ds.Tables["doc"].IsNull()) return docList;
 					foreach (DataRow dr in ds.Tables["doc"].Rows)
 					{
 						docList.Add(new UserDocument(dr));
