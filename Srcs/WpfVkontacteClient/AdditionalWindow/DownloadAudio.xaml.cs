@@ -14,6 +14,7 @@ namespace WpfVkontacteClient.AdditionalWindow
 	{
 		private AsyncDownloader loader = null;
 		private static readonly char[] invalidPath = System.IO.Path.GetInvalidFileNameChars();
+		private static readonly string mp3Ext = ".mp3";
 
 		public DownloadAudio(List<UserAudio> audioList)
 		{
@@ -63,23 +64,31 @@ namespace WpfVkontacteClient.AdditionalWindow
 		{
 			bool valid = true;
 			string fname = System.IO.Path.GetFileName(item.Url);
-			for (int i = 0; i < fname.Length; i++)
+			int indx = -1;
+			if ((indx = fname.IndexOf(mp3Ext)) != -1)
 			{
-				for (int j = 0; j < invalidPath.Length; j++)
+				fname = fname.Substring(0, indx + mp3Ext.Length);
+			}
+			else
+			{
+				for (int i = 0; i < fname.Length; i++)
 				{
-					if (fname[i] == invalidPath[j])
+					for (int j = 0; j < invalidPath.Length; j++)
 					{
-						valid = false;
-						break;
+						if (fname[i] == invalidPath[j])
+						{
+							valid = false;
+							break;
+						}
 					}
+					if (!valid)
+						break;
 				}
 				if (!valid)
-					break;
+					fname = Guid.NewGuid().ToString("N") + mp3Ext;
 			}
-			if (!valid)
-				fname = Guid.NewGuid().ToString("N");
-			item.PathToSave = System.IO.Path.Combine((Application.Current as App).AppFolder,
-				"Audio", fname);
+			item.PathToSave = System.IO.Path.Combine(
+				(Application.Current as App).AppFolder, "Audio", fname);
 		}
 
 		private void loader_ProgressChanged(object sender, EventArgs e)
